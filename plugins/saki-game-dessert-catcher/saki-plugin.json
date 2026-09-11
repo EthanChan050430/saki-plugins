@@ -1,15 +1,15 @@
 {
   "name": "saki-game-dessert-catcher",
   "version": "1.0.0",
-  "displayName": "🍰 Saki 的甜点大作战 (Dessert Catcher)",
-  "description": "治愈系休闲小游戏！移动 Saki 盘子接住从天而降的马卡龙与蛋糕，小心避开辣椒哦！带有 8-bit 复古音效与连击奖励。",
+  "displayName": "Saki 甜点大作战 (Dessert Catcher)",
+  "description": "休闲解压小游戏：移动托盘接取随机掉落的甜点并避开阻碍，支持键盘与触屏操作。",
   "author": "PixelBaker",
   "type": "game",
   "icon": "preview.svg",
   "minPanelVersion": "3.5.0",
   "game": {
     "entry": "index.html",
-    "title": "🍰 Saki 的甜点大作战",
+    "title": "Saki 甜点大作战",
     "width": 460,
     "height": 640
   }
