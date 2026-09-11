@@ -1,0 +1,13 @@
+{
+  "name": "saki-theme-sakura-dream",
+  "version": "1.0.0",
+  "displayName": "🌸 樱花梦境 (Sakura Dream)",
+  "description": "温柔柔和的樱花粉白主题，附带唯美磨砂玻璃质感与呼吸微光动画，深夜运维也不刺眼。",
+  "author": "SakiCommunity",
+  "type": "theme",
+  "icon": "preview.svg",
+  "minPanelVersion": "3.5.0",
+  "theme": {
+    "css": "theme.css"
+  }
+}

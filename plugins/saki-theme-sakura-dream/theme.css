@@ -1,0 +1,78 @@
+/* =========================================================
+   🌸 樱花梦境 (Sakura Dream) — Saki Panel 自定义主题
+   ========================================================= */
+
+:root {
+  /* 樱花粉主色调与渐变微光 */
+  --accent: #f472b6 !important;
+  --accent-hover: #fb7185 !important;
+  --accent-rgb: 244, 114, 182 !important;
+
+  /* 柔和透光毛玻璃背景 */
+  --surface-panel: rgba(255, 240, 246, 0.07) !important;
+  --surface-panel-rgb: 255, 240, 246 !important;
+  --surface-strong: rgba(244, 114, 182, 0.15) !important;
+  --border-subtle: rgba(244, 114, 182, 0.22) !important;
+  --border-strong: rgba(244, 114, 182, 0.45) !important;
+
+  /* 柔和对比度文字 */
+  --text-primary: #fff1f5 !important;
+  --text-secondary: rgba(255, 228, 238, 0.82) !important;
+  --text-muted: rgba(255, 200, 220, 0.55) !important;
+
+  /* 侧边栏与顶栏柔化微光 */
+  --sidebar-bg: rgba(24, 14, 22, 0.85) !important;
+  --topbar-bg: rgba(24, 14, 22, 0.7) !important;
+
+  /* 发光投影 */
+  --shadow-glow: 0 0 20px rgba(244, 114, 182, 0.25) !important;
+}
+
+/* 激活状态按钮与选项卡发光 */
+.nav-item-dashboard.active,
+.nav-item-instances.active,
+.nav-item-nodes.active,
+.nav-item-templates.active,
+.nav-item-users.active,
+.nav-item-audit.active,
+.nav-item-reliability.active,
+.nav-item-settings.active,
+.nav-item-about.active,
+.nav-item-plugins.active {
+  background: linear-gradient(135deg, rgba(244, 114, 182, 0.25), rgba(251, 113, 133, 0.15)) !important;
+  border-left: 3px solid #f472b6 !important;
+  box-shadow: 0 4px 15px rgba(244, 114, 182, 0.2) !important;
+  color: #fff1f5 !important;
+}
+
+/* 顶部栏装饰呼吸流光 */
+.topbar {
+  border-bottom: 1px solid rgba(244, 114, 182, 0.2) !important;
+  background: linear-gradient(90deg, rgba(24, 14, 22, 0.75), rgba(40, 20, 35, 0.65)) !important;
+}
+
+/* 樱花卡片微光边框 */
+.panel-card,
+.instance-card,
+.node-card,
+.plugin-card {
+  border-color: rgba(244, 114, 182, 0.18) !important;
+}
+
+.panel-card:hover,
+.instance-card:hover,
+.node-card:hover,
+.plugin-card:hover {
+  border-color: rgba(244, 114, 182, 0.45) !important;
+  box-shadow: 0 8px 24px rgba(244, 114, 182, 0.18) !important;
+}
+
+/* 柔和个性化滚动条 */
+::-webkit-scrollbar-thumb {
+  background: rgba(244, 114, 182, 0.3) !important;
+  border-radius: 8px !important;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(244, 114, 182, 0.5) !important;
+}

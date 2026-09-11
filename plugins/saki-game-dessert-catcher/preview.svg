@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 240" width="400" height="240">
+  <defs>
+    <linearGradient id="gameBg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#2e1065" />
+      <stop offset="100%" stop-color="#0f0728" />
+    </linearGradient>
+  </defs>
+
+  <rect width="400" height="240" rx="16" fill="url(#gameBg)" />
+
+  <!-- Pixel / Retro Arcade Borders -->
+  <rect x="12" y="12" width="376" height="216" rx="12" fill="none" stroke="rgba(244, 114, 182, 0.4)" stroke-width="2" />
+
+  <!-- Falling Sweets -->
+  <text x="60" y="70" font-size="28">🧁</text>
+  <text x="180" y="50" font-size="34">🍰</text>
+  <text x="310" y="80" font-size="30">⭐</text>
+  <text x="110" y="110" font-size="24">🌶️</text>
+
+  <!-- Player Plate and Saki -->
+  <g transform="translate(150, 150)">
+    <!-- Plate -->
+    <ellipse cx="50" cy="15" rx="45" ry="8" fill="#ffffff" stroke="#f472b6" stroke-width="2" />
+    <!-- Saki Head -->
+    <circle cx="50" cy="40" r="18" fill="#38bdf8" />
+    <circle cx="50" cy="41" r="14" fill="#ffe4e6" />
+    <path d="M45 40 Q47 43 49 40" stroke="#1e1b4b" stroke-width="1.5" fill="none" />
+    <path d="M51 40 Q53 43 55 40" stroke="#1e1b4b" stroke-width="1.5" fill="none" />
+  </g>
+
+  <!-- Game Title and Score Mock -->
+  <rect x="25" y="24" width="130" height="24" rx="6" fill="rgba(0,0,0,0.5)" />
+  <text x="35" y="40" fill="#f472b6" font-size="12" font-family="system-ui" font-weight="700">SCORE: 1,250 (3x)</text>
+
+  <rect x="285" y="24" width="90" height="24" rx="6" fill="rgba(0,0,0,0.5)" />
+  <text x="295" y="40" fill="#f43f5e" font-size="12" font-family="system-ui" font-weight="700">LIVES: ❤❤❤</text>
+</svg>

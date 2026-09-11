@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 160" width="160" height="160">
+  <defs>
+    <linearGradient id="hairGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#38bdf8" />
+      <stop offset="100%" stop-color="#818cf8" />
+    </linearGradient>
+    <linearGradient id="skinGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#fff5f5" />
+      <stop offset="100%" stop-color="#ffe4e6" />
+    </linearGradient>
+  </defs>
+  <!-- Cyber Maid Headband -->
+  <path d="M40 45 C40 20, 120 20, 120 45 L125 55 L35 55 Z" fill="#ffffff" stroke="#38bdf8" stroke-width="2" />
+  <circle cx="80" cy="32" r="8" fill="#38bdf8" />
+  <!-- Hair back -->
+  <circle cx="80" cy="85" r="50" fill="url(#hairGrad)" />
+  <!-- Face -->
+  <ellipse cx="80" cy="90" rx="38" ry="36" fill="url(#skinGrad)" />
+  <!-- Hair bangs -->
+  <path d="M44 70 C55 90, 65 72, 80 82 C95 72, 105 90, 116 70 C120 110, 40 110, 44 70 Z" fill="url(#hairGrad)" />
+  <!-- Looking Up Thinking Eyes -->
+  <ellipse cx="65" cy="84" rx="5" ry="7" fill="#1e1b4b" />
+  <circle cx="67" cy="81" r="2" fill="#ffffff" />
+  <ellipse cx="95" cy="84" rx="5" ry="7" fill="#1e1b4b" />
+  <circle cx="97" cy="81" r="2" fill="#ffffff" />
+  <!-- O mouth -->
+  <circle cx="80" cy="100" r="4" fill="#e11d48" />
+  <!-- Holographic Question Mark -->
+  <text x="115" y="65" fill="#38bdf8" font-size="24" font-weight="bold" font-family="system-ui">?</text>
+</svg>

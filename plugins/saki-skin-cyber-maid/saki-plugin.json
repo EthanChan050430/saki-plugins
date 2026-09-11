@@ -1,0 +1,30 @@
+{
+  "name": "saki-skin-cyber-maid",
+  "version": "1.0.0",
+  "displayName": "👗 赛博女仆 Saki 皮肤 (Cyber Maid)",
+  "description": "换上蓝白科技风女仆装的 Saki！附带全套定制表情包与动态桌面宠物贴图。",
+  "author": "DreamStarry",
+  "type": "skin",
+  "icon": "preview.svg",
+  "minPanelVersion": "3.5.0",
+  "skin": {
+    "expressions": "expressions",
+    "pet": "pet",
+    "mapping": {
+      "avatar": "expressions/normal.svg",
+      "launcher": "expressions/normal.svg",
+      "launcherHover": "expressions/happy.svg",
+      "normal": "expressions/normal.svg",
+      "happy": "expressions/happy.svg",
+      "thinking": "expressions/thinking.svg",
+      "shy": "expressions/shy.svg",
+      "pout": "expressions/pout.svg",
+      "gaming": "expressions/gaming.svg",
+      "petSit": "pet/sit.svg",
+      "petWalk": "pet/walk.svg",
+      "petSleep": "pet/sleep.svg",
+      "petLie": "pet/lie.svg",
+      "lie": "pet/lie.svg"
+    }
+  }
+}

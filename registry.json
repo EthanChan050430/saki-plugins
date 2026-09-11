@@ -1,0 +1,54 @@
+[
+  {
+    "name": "saki-theme-sakura-dream",
+    "displayName": "🌸 樱花梦境 (Sakura Dream)",
+    "description": "温柔柔和的樱花粉白主题，附带唯美磨砂玻璃质感与呼吸微光动画，深夜运维也不刺眼。",
+    "author": "SakiCommunity",
+    "type": "theme",
+    "version": "1.0.0",
+    "repo": "EthanChan050430/saki-plugins",
+    "icon": "preview.svg",
+    "stars": 158,
+    "downloads": 720,
+    "featured": true
+  },
+  {
+    "name": "saki-skin-cyber-maid",
+    "displayName": "👗 赛博女仆 Saki 皮肤",
+    "description": "换上全新蓝白科技感女仆装的 Saki！附带全套定制表情包与动态桌面宠物帧动画。",
+    "author": "DreamStarry",
+    "type": "skin",
+    "version": "1.0.0",
+    "repo": "EthanChan050430/saki-plugins",
+    "icon": "preview.svg",
+    "stars": 340,
+    "downloads": 1420,
+    "featured": true
+  },
+  {
+    "name": "saki-widget-server-toolbox",
+    "displayName": "🧰 极客运维工具箱 (Toolbox)",
+    "description": "轻量级快速运维卡片：网页网络测速、快捷记事便签、一键复制常用命令与时间戳转换。",
+    "author": "DevCat",
+    "type": "widget",
+    "version": "1.0.0",
+    "repo": "EthanChan050430/saki-plugins",
+    "icon": "preview.svg",
+    "stars": 180,
+    "downloads": 730,
+    "featured": true
+  },
+  {
+    "name": "saki-game-dessert-catcher",
+    "displayName": "🍰 Saki 的甜点大作战",
+    "description": "治愈系休闲小游戏！移动 Saki 盘子接住从天而降的马卡龙与蛋糕，小心避开辣椒哦！带有 8-bit 复古音效与连击奖励。",
+    "author": "PixelBaker",
+    "type": "game",
+    "version": "1.0.0",
+    "repo": "EthanChan050430/saki-plugins",
+    "icon": "preview.svg",
+    "stars": 412,
+    "downloads": 2150,
+    "featured": true
+  }
+]

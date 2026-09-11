@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>🍰 Saki 的甜点大作战</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; user-select: none; }
+    body {
+      background: radial-gradient(circle at center, #2e1065, #0f0728);
+      color: #fff;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      overflow: hidden;
+    }
+    #gameCanvas {
+      background: rgba(0, 0, 0, 0.4);
+      border: 2px solid rgba(244, 114, 182, 0.4);
+      border-radius: 16px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6), 0 0 20px rgba(244, 114, 182, 0.2);
+      cursor: crosshair;
+      touch-action: none;
+      max-width: 95vw;
+      max-height: 85vh;
+    }
+    .hud {
+      display: flex;
+      justify-content: space-between;
+      width: 440px;
+      max-width: 95vw;
+      padding: 8px 12px;
+      font-size: 14px;
+      font-weight: 600;
+      color: #fbcfe8;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+    }
+    .controls-hint {
+      margin-top: 8px;
+      font-size: 11px;
+      color: rgba(255, 255, 255, 0.5);
+    }
+  </style>
+</head>
+<body>
+  <div class="hud">
+    <div>得分: <span id="scoreVal" style="color: #f472b6;">0</span> (最高: <span id="highVal">0</span>)</div>
+    <div>生命: <span id="livesVal" style="color: #f43f5e;">❤❤❤</span></div>
+  </div>
+
+  <canvas id="gameCanvas" width="440" height="580"></canvas>
+
+  <div class="controls-hint">
+    左右键 / A-D 键 / 鼠标或手指滑动控制 Saki 接甜点
+  </div>
+
+  <script>
+    // --- Retro 8-bit Audio Synthesizer via Web Audio API ---
+    class SoundFX {
+      constructor() {
+        this.ctx = null;
+      }
+      init() {
+        if (!this.ctx) {
+          const AudioContext = window.AudioContext || window.webkitAudioContext;
+          if (AudioContext) this.ctx = new AudioContext();
+        }
+        if (this.ctx && this.ctx.state === 'suspended') {
+          this.ctx.resume();
+        }
+      }
+      playScore() {
+        if (!this.ctx) return;
+        const now = this.ctx.currentTime;
+        const osc = this.ctx.createOscillator();
+        const gain = this.ctx.createGain();
+        osc.type = 'triangle';
+        osc.frequency.setValueAtTime(523.25, now);
+        osc.frequency.exponentialRampToValueAtTime(880, now + 0.1);
+        gain.gain.setValueAtTime(0.12, now);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.12);
+        osc.connect(gain); gain.connect(this.ctx.destination);
+        osc.start(now); osc.stop(now + 0.12);
+      }
+      playStar() {
+        if (!this.ctx) return;
+        const now = this.ctx.currentTime;
+        [587.33, 783.99, 1046.5].forEach((freq, i) => {
+          const osc = this.ctx.createOscillator();
+          const gain = this.ctx.createGain();
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(freq, now + i * 0.06);
+          gain.gain.setValueAtTime(0.1, now + i * 0.06);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + i * 0.06 + 0.15);
+          osc.connect(gain); gain.connect(this.ctx.destination);
+          osc.start(now + i * 0.06); osc.stop(now + i * 0.06 + 0.15);
+        });
+      }
+      playHurt() {
+        if (!this.ctx) return;
+        const now = this.ctx.currentTime;
+        const osc = this.ctx.createOscillator();
+        const gain = this.ctx.createGain();
+        osc.type = 'sawtooth';
+        osc.frequency.setValueAtTime(160, now);
+        osc.frequency.linearRampToValueAtTime(60, now + 0.2);
+        gain.gain.setValueAtTime(0.15, now);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.2);
+        osc.connect(gain); gain.connect(this.ctx.destination);
+        osc.start(now); osc.stop(now + 0.2);
+      }
+    }
+    const sfx = new SoundFX();
+
+    // --- Game Logic ---
+    const canvas = document.getElementById('gameCanvas');
+    const ctx = canvas.getContext('2d');
+    const scoreVal = document.getElementById('scoreVal');
+    const highVal = document.getElementById('highVal');
+    const livesVal = document.getElementById('livesVal');
+
+    let score = 0;
+    let highScore = parseInt(localStorage.getItem('saki_dessert_highscore') || '0', 10);
+    highVal.innerText = highScore;
+    let lives = 3;
+    let combo = 0;
+    let gameOver = false;
+    let gameStarted = false;
+
+    // Saki Player
+    const player = {
+      x: canvas.width / 2 - 40,
+      y: canvas.height - 70,
+      width: 80,
+      height: 50,
+      speed: 7,
+      vx: 0
+    };
+
+    // Falling items
+    const items = [];
+    const particles = [];
+    const floatingTexts = [];
+
+    const ITEM_TYPES = [
+      { type: 'macaron', score: 10, emoji: '🧁', speed: 2.6, chance: 0.45 },
+      { type: 'cake', score: 25, emoji: '🍰', speed: 3.2, chance: 0.25 },
+      { type: 'star', score: 50, emoji: '⭐', speed: 3.8, chance: 0.15 },
+      { type: 'chili', score: 0, emoji: '🌶️', speed: 3.5, chance: 0.15, isHazard: true }
+    ];
+
+    function spawnItem() {
+      if (gameOver || !gameStarted) return;
+      const rand = Math.random();
+      let acc = 0;
+      let selected = ITEM_TYPES[0];
+      for (const t of ITEM_TYPES) {
+        acc += t.chance;
+        if (rand <= acc) {
+          selected = t;
+          break;
+        }
+      }
+      items.push({
+        ...selected,
+        x: 20 + Math.random() * (canvas.width - 50),
+        y: -30,
+        size: 32,
+        rot: 0,
+        vRot: (Math.random() - 0.5) * 0.08
+      });
+    }
+
+    let spawnTimer = setInterval(spawnItem, 750);
+
+    // Particle Burst
+    function createBurst(x, y, color) {
+      for (let i = 0; i < 8; i++) {
+        particles.push({
+          x, y,
+          vx: (Math.random() - 0.5) * 6,
+          vy: (Math.random() - 0.8) * 6,
+          radius: 3 + Math.random() * 3,
+          color: color || '#f472b6',
+          alpha: 1
+        });
+      }
+    }
+
+    function addFloatingText(text, x, y, color) {
+      floatingTexts.push({ text, x, y, vy: -1.5, alpha: 1, color: color || '#fbcfe8' });
+    }
+
+    // Input handlers
+    const keys = {};
+    window.addEventListener('keydown', (e) => {
+      sfx.init();
+      keys[e.key] = true;
+      if (!gameStarted && (e.key === ' ' || e.key === 'Enter')) {
+        startGame();
+      }
+      if (gameOver && (e.key === ' ' || e.key === 'Enter')) {
+        restartGame();
+      }
+    });
+    window.addEventListener('keyup', (e) => { keys[e.key] = false; });
+
+    // Touch & Mouse
+    let isTouching = false;
+    function setPlayerX(clientX) {
+      const rect = canvas.getBoundingClientRect();
+      const scaleX = canvas.width / rect.width;
+      const targetX = (clientX - rect.left) * scaleX - player.width / 2;
+      player.x = Math.max(0, Math.min(canvas.width - player.width, targetX));
+    }
+
+    canvas.addEventListener('pointerdown', (e) => {
+      sfx.init();
+      if (!gameStarted) { startGame(); return; }
+      if (gameOver) { restartGame(); return; }
+      isTouching = true;
+      setPlayerX(e.clientX);
+    });
+    window.addEventListener('pointermove', (e) => {
+      if (isTouching) setPlayerX(e.clientX);
+    });
+    window.addEventListener('pointerup', () => { isTouching = false; });
+
+    function startGame() {
+      gameStarted = true;
+      gameOver = false;
+      score = 0;
+      combo = 0;
+      lives = 3;
+      items.length = 0;
+      updateHud();
+    }
+
+    function restartGame() {
+      startGame();
+    }
+
+    function updateHud() {
+      scoreVal.innerText = score;
+      livesVal.innerText = '❤'.repeat(Math.max(0, lives));
+      if (score > highScore) {
+        highScore = score;
+        highVal.innerText = highScore;
+        localStorage.setItem('saki_dessert_highscore', String(highScore));
+      }
+    }
+
+    // Main Update Loop
+    function update() {
+      if (!gameStarted || gameOver) return;
+
+      // Keyboard movement
+      if (keys['ArrowLeft'] || keys['a'] || keys['A']) player.vx = -player.speed;
+      else if (keys['ArrowRight'] || keys['d'] || keys['D']) player.vx = player.speed;
+      else player.vx = 0;
+
+      player.x += player.vx;
+      player.x = Math.max(0, Math.min(canvas.width - player.width, player.x));
+
+      // Items update
+      for (let i = items.length - 1; i >= 0; i--) {
+        const item = items[i];
+        item.y += item.speed;
+        item.rot += item.vRot;
+
+        // Collision with player plate
+        if (
+          item.y + item.size >= player.y &&
+          item.y <= player.y + player.height &&
+          item.x + item.size >= player.x &&
+          item.x <= player.x + player.width
+        ) {
+          if (item.isHazard) {
+            // Hit chili
+            lives--;
+            combo = 0;
+            sfx.playHurt();
+            createBurst(item.x + 15, item.y + 15, '#ef4444');
+            addFloatingText('MISS!', item.x, item.y, '#ef4444');
+            if (lives <= 0) {
+              gameOver = true;
+            }
+          } else {
+            // Hit sweet
+            combo++;
+            const mult = combo > 10 ? 3 : combo > 5 ? 2 : 1;
+            const pts = item.score * mult;
+            score += pts;
+            if (item.type === 'star') sfx.playStar(); else sfx.playScore();
+            createBurst(item.x + 15, item.y + 15, '#f472b6');
+            addFloatingText(`+${pts}${mult > 1 ? ` (${mult}x)` : ''}`, item.x, item.y, '#fbcfe8');
+          }
+          items.splice(i, 1);
+          updateHud();
+          continue;
+        }
+
+        // Missed bottom
+        if (item.y > canvas.height + 40) {
+          if (!item.isHazard) combo = 0;
+          items.splice(i, 1);
+        }
+      }
+
+      // Particles
+      for (let i = particles.length - 1; i >= 0; i--) {
+        const p = particles[i];
+        p.x += p.vx;
+        p.y += p.vy;
+        p.alpha -= 0.03;
+        if (p.alpha <= 0) particles.splice(i, 1);
+      }
+
+      // Floating texts
+      for (let i = floatingTexts.length - 1; i >= 0; i--) {
+        const t = floatingTexts[i];
+        t.y += t.vy;
+        t.alpha -= 0.025;
+        if (t.alpha <= 0) floatingTexts.splice(i, 1);
+      }
+    }
+
+    // Render Loop
+    function draw() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      // Starfield background
+      ctx.fillStyle = 'rgba(255, 255, 255, 0.15)';
+      for (let i = 0; i < 20; i++) {
+        const sx = (i * 37 + 23) % canvas.width;
+        const sy = (i * 59 + 17) % canvas.height;
+        ctx.fillRect(sx, sy, 1.5, 1.5);
+      }
+
+      if (!gameStarted) {
+        ctx.fillStyle = '#fbcfe8';
+        ctx.font = 'bold 22px system-ui';
+        ctx.textAlign = 'center';
+        ctx.fillText('🍰 Saki 的甜点大作战', canvas.width / 2, canvas.height / 2 - 30);
+        ctx.fillStyle = '#f472b6';
+        ctx.font = '14px system-ui';
+        ctx.fillText('接住掉落的甜点与星星，避开辣椒！', canvas.width / 2, canvas.height / 2 + 10);
+        ctx.fillStyle = '#fff';
+        ctx.fillText('👉 点击屏幕或按回车开始游戏 👈', canvas.width / 2, canvas.height / 2 + 50);
+        requestAnimationFrame(gameLoop);
+        return;
+      }
+
+      // Draw Items
+      for (const item of items) {
+        ctx.save();
+        ctx.translate(item.x + item.size / 2, item.y + item.size / 2);
+        ctx.rotate(item.rot);
+        ctx.font = `${item.size}px serif`;
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText(item.emoji, 0, 0);
+        ctx.restore();
+      }
+
+      // Draw Player: Saki with Dessert Plate
+      // Plate
+      ctx.fillStyle = 'rgba(255, 255, 255, 0.9)';
+      ctx.beginPath();
+      ctx.ellipse(player.x + player.width / 2, player.y + 10, player.width / 2, 8, 0, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.strokeStyle = '#f472b6';
+      ctx.lineWidth = 2;
+      ctx.stroke();
+
+      // Saki mini head peeking under plate
+      ctx.fillStyle = '#38bdf8';
+      ctx.beginPath();
+      ctx.arc(player.x + player.width / 2, player.y + 35, 18, 0, Math.PI * 2);
+      ctx.fill();
+      // Face
+      ctx.fillStyle = '#ffe4e6';
+      ctx.beginPath();
+      ctx.arc(player.x + player.width / 2, player.y + 36, 14, 0, Math.PI * 2);
+      ctx.fill();
+      // Eyes ^_^
+      ctx.strokeStyle = '#1e1b4b';
+      ctx.lineWidth = 1.5;
+      ctx.beginPath();
+      ctx.arc(player.x + player.width / 2 - 5, player.y + 35, 3, Math.PI, 0);
+      ctx.arc(player.x + player.width / 2 + 5, player.y + 35, 3, Math.PI, 0);
+      ctx.stroke();
+
+      // Particles
+      for (const p of particles) {
+        ctx.save();
+        ctx.globalAlpha = p.alpha;
+        ctx.fillStyle = p.color;
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.restore();
+      }
+
+      // Floating text
+      for (const t of floatingTexts) {
+        ctx.save();
+        ctx.globalAlpha = t.alpha;
+        ctx.fillStyle = t.color;
+        ctx.font = 'bold 15px system-ui';
+        ctx.textAlign = 'center';
+        ctx.fillText(t.text, t.x, t.y);
+        ctx.restore();
+      }
+
+      // Game Over Screen
+      if (gameOver) {
+        ctx.fillStyle = 'rgba(0, 0, 0, 0.75)';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        ctx.fillStyle = '#f43f5e';
+        ctx.font = 'bold 26px system-ui';
+        ctx.textAlign = 'center';
+        ctx.fillText('游戏结束 (GAME OVER)', canvas.width / 2, canvas.height / 2 - 30);
+        ctx.fillStyle = '#fff';
+        ctx.font = '16px system-ui';
+        ctx.fillText(`最终得分: ${score} 分`, canvas.width / 2, canvas.height / 2 + 10);
+        ctx.fillStyle = '#38bdf8';
+        ctx.font = '13px system-ui';
+        ctx.fillText('点击屏幕重新挑战！', canvas.width / 2, canvas.height / 2 + 50);
+      }
+
+      requestAnimationFrame(gameLoop);
+    }
+
+    function gameLoop() {
+      update();
+      draw();
+    }
+
+    requestAnimationFrame(gameLoop);
+  </script>
+</body>
+</html>

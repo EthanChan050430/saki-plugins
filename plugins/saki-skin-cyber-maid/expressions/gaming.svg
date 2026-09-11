@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 160" width="160" height="160">
+  <defs>
+    <linearGradient id="hairGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#38bdf8" />
+      <stop offset="100%" stop-color="#818cf8" />
+    </linearGradient>
+    <linearGradient id="skinGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#fff5f5" />
+      <stop offset="100%" stop-color="#ffe4e6" />
+    </linearGradient>
+  </defs>
+  <!-- Gaming Cyber Headset Band -->
+  <path d="M30 85 C30 35, 130 35, 130 85" fill="none" stroke="#6366f1" stroke-width="8" stroke-linecap="round" />
+  <!-- Hair back -->
+  <circle cx="80" cy="85" r="50" fill="url(#hairGrad)" />
+  <!-- Headset Earcups -->
+  <rect x="24" y="70" width="14" height="30" rx="6" fill="#1e1b4b" stroke="#38bdf8" stroke-width="2" />
+  <rect x="122" y="70" width="14" height="30" rx="6" fill="#1e1b4b" stroke="#38bdf8" stroke-width="2" />
+  <circle cx="31" cy="85" r="4" fill="#ec4899" />
+  <circle cx="129" cy="85" r="4" fill="#ec4899" />
+  <!-- Face -->
+  <ellipse cx="80" cy="90" rx="38" ry="36" fill="url(#skinGrad)" />
+  <!-- Hair bangs -->
+  <path d="M44 70 C55 90, 65 72, 80 82 C95 72, 105 90, 116 70 C120 110, 40 110, 44 70 Z" fill="url(#hairGrad)" />
+  <!-- Focused Gaming Eyes -->
+  <ellipse cx="65" cy="88" rx="5" ry="7" fill="#1e1b4b" />
+  <polygon points="65,85 68,88 65,91 62,88" fill="#38bdf8" />
+  <ellipse cx="95" cy="88" rx="5" ry="7" fill="#1e1b4b" />
+  <polygon points="95,85 98,88 95,91 92,88" fill="#38bdf8" />
+  <!-- Determined small mouth -->
+  <path d="M76 100 L84 100" stroke="#e11d48" stroke-width="2.5" stroke-linecap="round" />
+  <!-- Mic boom -->
+  <path d="M36 90 Q50 110 65 106" fill="none" stroke="#475569" stroke-width="3" stroke-linecap="round" />
+  <circle cx="67" cy="106" r="3" fill="#38bdf8" />
+</svg>

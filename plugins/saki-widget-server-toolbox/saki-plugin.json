@@ -1,0 +1,16 @@
+{
+  "name": "saki-widget-server-toolbox",
+  "version": "1.0.0",
+  "displayName": "🧰 极客运维工具箱 (Server Toolbox)",
+  "description": "轻量级快速运维卡片：网页网络测速、快捷记事便签、一键复制常用命令与时间戳转换。",
+  "author": "DevCat",
+  "type": "widget",
+  "icon": "preview.svg",
+  "minPanelVersion": "3.5.0",
+  "widget": {
+    "entry": "index.html",
+    "mountPoint": "dashboard",
+    "width": 380,
+    "height": 420
+  }
+}
