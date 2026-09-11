@@ -2,7 +2,7 @@
 
 街机切水果。在沙箱里用指针滑动切开飞出的水果，避开炸弹。连击会提高单次得分。
 
-开发说明：[中文](../../README.md#游戏与组件) · [English](../../README.en.md#games-and-widgets)
+开发说明：[中文](../../README.md#5-写游戏) · [English](../../README.en.md#5-writing-a-game)
 
 ## 操作
 

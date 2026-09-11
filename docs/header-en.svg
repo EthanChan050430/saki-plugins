@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1100" height="168" viewBox="0 0 1100 168" role="img" aria-label="Saki Panel plugin guide">
+  <style>
+    .paper { fill: #ece7dc; }
+    .ink { fill: #12141a; }
+    .cobalt { fill: #1f4bff; }
+    .mute { fill: #5c6370; }
+    .line { stroke: #12141a; stroke-opacity: 0.08; stroke-width: 1; }
+    .title { font: 700 36px/1.1 ui-sans-serif, system-ui, "Segoe UI", sans-serif; }
+    .sub { font: 500 15px/1.4 ui-sans-serif, system-ui, "Segoe UI", sans-serif; letter-spacing: 0.16em; }
+    @media (prefers-color-scheme: dark) {
+      .paper { fill: #121820; }
+      .ink { fill: #e8edf7; }
+      .cobalt { fill: #6b8cff; }
+      .mute { fill: #9aa3b5; }
+      .line { stroke: #6b8cff; stroke-opacity: 0.16; }
+    }
+  </style>
+  <rect class="paper" width="1100" height="168"/>
+  <g>
+    <line class="line" x1="56" y1="0" x2="56" y2="168"/>
+    <line class="line" x1="112" y1="0" x2="112" y2="168"/>
+    <line class="line" x1="0" y1="56" x2="1100" y2="56"/>
+    <line class="line" x1="0" y1="112" x2="1100" y2="112"/>
+  </g>
+  <rect class="cobalt" x="0" y="0" width="10" height="168"/>
+  <rect class="cobalt" x="1054" y="24" width="22" height="22"/>
+  <polygon class="ink" points="1088,118 1100,148 1070,148"/>
+  <text class="sub mute" x="36" y="48">SAKI PANEL  ·  PLUGIN GUIDE</text>
+  <text class="title ink" x="36" y="98">From an empty folder to the Workshop</text>
+  <text class="sub mute" x="36" y="136">MANIFEST · THEME · SKIN · GAME · WIDGET · LOCALE</text>
+</svg>

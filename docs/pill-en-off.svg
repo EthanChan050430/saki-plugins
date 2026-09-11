@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="108" height="32" viewBox="0 0 108 32">
+  <style>
+    .bg { fill: #ece7dc; }
+    .stroke { fill: none; stroke: #12141a; stroke-width: 2; }
+    .fg { fill: #12141a; }
+    .t { font: 600 13px ui-sans-serif, system-ui, "Segoe UI", sans-serif; }
+    @media (prefers-color-scheme: dark) {
+      .bg { fill: #121820; }
+      .stroke { stroke: #6b8cff; }
+      .fg { fill: #e8edf7; }
+    }
+  </style>
+  <rect class="bg" x="1" y="1" width="106" height="30"/>
+  <rect class="stroke" x="1" y="1" width="106" height="30"/>
+  <text class="t fg" x="54" y="21" text-anchor="middle">English</text>
+</svg>

@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1100" height="12" viewBox="0 0 1100 12">
+  <style>
+    .a { fill: #1f4bff; }
+    .b { stroke: #12141a; stroke-opacity: 0.18; stroke-width: 1; }
+    @media (prefers-color-scheme: dark) {
+      .a { fill: #6b8cff; }
+      .b { stroke: #6b8cff; stroke-opacity: 0.35; }
+    }
+  </style>
+  <line class="b" x1="0" y1="6" x2="1100" y2="6"/>
+  <rect class="a" x="0" y="3" width="72" height="6"/>
+</svg>

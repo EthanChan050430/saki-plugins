@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="92" height="32" viewBox="0 0 92 32">
+  <style>
+    .bg { fill: #1f4bff; }
+    .fg { fill: #fffaf0; }
+    .t { font: 600 13px ui-sans-serif, system-ui, "PingFang SC", "Microsoft YaHei", sans-serif; }
+    @media (prefers-color-scheme: dark) {
+      .bg { fill: #6b8cff; }
+      .fg { fill: #12141a; }
+    }
+  </style>
+  <rect class="bg" x="1" y="1" width="90" height="30"/>
+  <text class="t fg" x="46" y="21" text-anchor="middle">中文</text>
+</svg>

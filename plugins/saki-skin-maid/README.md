@@ -2,7 +2,7 @@
 
 Saki 形象扩展。按面板 `/assets/` 同路径覆盖立绘。
 
-开发说明：[中文](../../README.md#形象) · [English](../../README.en.md#skins)
+开发说明：[中文](../../README.md#4-写形象) · [English](../../README.en.md#4-writing-a-skin)
 
 ## 表情动作
 
