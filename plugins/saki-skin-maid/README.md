@@ -1,11 +1,9 @@
 # 女仆装
 
-Saki 形象扩展。只替换插件里**实际提供的**同路径 webp；没有的表情、桌宠动作和动画帧继续用面板原版。
+Saki 形象扩展。按面板 `/assets/` 同路径覆盖立绘。
 
-## 覆盖范围
+## 表情动作
 
-- 启动器 / 头像 / 趴桌 / 探头
-- 常用表情立绘
-- 桌宠待机、走路循环（walk_f1–f6）、坐、睡、跑、爬等
+全部表情静态图 + 全部 6 帧循环都已换成女仆装，包括 happy / shy / think / worry / wink / cry / surprised / pout / OK / sorry / sleepy / eating / working / reading / checkfiles / gaming / listen / waiting / writing / terminal / search / diagnose / rollback / blocked / singing / upset / middlefinger。
 
-未收录的资源（例如部分 6 帧表情动画、洗澡循环）会保持原校服图，避免用错姿态顶替。
+未收录的桌宠资源（如洗澡循环）继续使用面板原版。

@@ -1,8 +1,8 @@
 {
   "name": "saki-skin-maid",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "displayName": "女仆装",
-  "description": "Saki 形象扩展：按原资源路径替换女仆装立绘。未提供的文件与动画帧保持面板原版。",
+  "description": "Saki 形象扩展：全套表情立绘与 6 帧动作循环换成法式女仆装。未提供的桌宠资源保持面板原版。",
   "author": "DreamStarry",
   "type": "skin",
   "icon": "preview.webp",
