@@ -1,4 +1,7 @@
 pack_assets.py
+pack_maid.py
+clean_maid_edges.py
+__pycache__/
 .DS_Store
 Thumbs.db
 *.log
