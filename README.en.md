@@ -84,8 +84,8 @@ For `preview.webp`, drop in a **4:3 landscape** image, 1600×1200 is fine. Witho
 
 Open the Plugin Workshop. You should see "My first theme". Click **Apply theme**. If the accent changes from pink to blue, the manifest, the stylesheet and `htmlClass` all connected. Sidebar, login page and rounded corners are just more rules in the same CSS file.
 
-<div style="background:#fff8e6;border:1px solid #f0d98c;border-left:4px solid #f0b429;border-radius:6px;padding:12px 16px;margin:16px 0;">
-  <strong style="color:#9a6700;">About the <code>name</code> field</strong><br>
+<div style="background:#faf8f3;border:1px solid #ece4d3;border-left:3px solid #c99a2e;border-radius:4px;padding:14px 18px;margin:20px 0;">
+  <strong style="color:#8a6a18;">About the <code>name</code> field</strong><br>
   <code>name</code> becomes the plugin id and the folder name. Only letters, digits, underscores and hyphens are allowed, and it must start with a letter or digit. <strong>Don't rename it after install</strong> — that creates a brand-new plugin and leaves the old one behind.
 </div>
 
@@ -112,36 +112,36 @@ Enter `owner/repo` in the Workshop to install every plugin it finds. To install 
 
 After install, each type behaves differently:
 
-<table>
+<table style="border-collapse:collapse;width:100%;font-size:14px;margin:8px 0;">
   <tr>
-    <th width="120">type you set</th>
-    <th>What the panel does</th>
-    <th>What you still click</th>
+    <th width="120" style="text-align:left;padding:10px 14px;border-bottom:2px solid #1f4bff;color:#1f4bff;">type you set</th>
+    <th style="text-align:left;padding:10px 14px;border-bottom:2px solid #1f4bff;color:#1f4bff;">What the panel does</th>
+    <th style="text-align:left;padding:10px 14px;border-bottom:2px solid #1f4bff;color:#1f4bff;">What you still click</th>
   </tr>
   <tr>
-    <td><code>theme</code></td>
-    <td>Injects a <code>&lt;link&gt;</code> to your CSS and adds <code>htmlClass</code> to <code>&lt;html&gt;</code></td>
-    <td><strong>Apply theme</strong>. Only one at a time. The login page loads it before sign-in.</td>
+    <td style="padding:10px 14px;border-bottom:1px solid #eef0f4;vertical-align:top;"><code>theme</code></td>
+    <td style="padding:10px 14px;border-bottom:1px solid #eef0f4;vertical-align:top;">Injects a <code>&lt;link&gt;</code> to your CSS and adds <code>htmlClass</code> to <code>&lt;html&gt;</code></td>
+    <td style="padding:10px 14px;border-bottom:1px solid #eef0f4;vertical-align:top;"><strong>Apply theme</strong>. Only one at a time. The login page loads it before sign-in.</td>
   </tr>
   <tr>
-    <td><code>skin</code></td>
-    <td>Replaces images by <code>/assets/</code>-relative path</td>
-    <td><strong>Change appearance</strong>. Only one at a time. Missing paths keep the original art.</td>
+    <td style="padding:10px 14px;border-bottom:1px solid #eef0f4;vertical-align:top;"><code>skin</code></td>
+    <td style="padding:10px 14px;border-bottom:1px solid #eef0f4;vertical-align:top;">Replaces images by <code>/assets/</code>-relative path</td>
+    <td style="padding:10px 14px;border-bottom:1px solid #eef0f4;vertical-align:top;"><strong>Change appearance</strong>. Only one at a time. Missing paths keep the original art.</td>
   </tr>
   <tr>
-    <td><code>game</code></td>
-    <td>Opens <code>game.entry</code> in a sandboxed iframe</td>
-    <td><strong>Play</strong>, or open it from Saki's phone.</td>
+    <td style="padding:10px 14px;border-bottom:1px solid #eef0f4;vertical-align:top;"><code>game</code></td>
+    <td style="padding:10px 14px;border-bottom:1px solid #eef0f4;vertical-align:top;">Opens <code>game.entry</code> in a sandboxed iframe</td>
+    <td style="padding:10px 14px;border-bottom:1px solid #eef0f4;vertical-align:top;"><strong>Play</strong>, or open it from Saki's phone.</td>
   </tr>
   <tr>
-    <td><code>widget</code></td>
-    <td>Same sandbox iframe</td>
-    <td><strong>Enable</strong>. There is no "Apply" button.</td>
+    <td style="padding:10px 14px;border-bottom:1px solid #eef0f4;vertical-align:top;"><code>widget</code></td>
+    <td style="padding:10px 14px;border-bottom:1px solid #eef0f4;vertical-align:top;">Same sandbox iframe</td>
+    <td style="padding:10px 14px;border-bottom:1px solid #eef0f4;vertical-align:top;"><strong>Enable</strong>. There is no "Apply" button.</td>
   </tr>
   <tr>
-    <td><code>locale</code></td>
-    <td>Adds your JSON dictionary to the language list</td>
-    <td><strong>Enable</strong>, then go to <strong>System settings → Panel language</strong>.</td>
+    <td style="padding:10px 14px;border-bottom:1px solid #eef0f4;vertical-align:top;"><code>locale</code></td>
+    <td style="padding:10px 14px;border-bottom:1px solid #eef0f4;vertical-align:top;">Adds your JSON dictionary to the language list</td>
+    <td style="padding:10px 14px;border-bottom:1px solid #eef0f4;vertical-align:top;"><strong>Enable</strong>, then go to <strong>System settings → Panel language</strong>.</td>
   </tr>
 </table>
 
@@ -175,12 +175,12 @@ The file must be named `saki-plugin.json`, sit at the plugin root, be UTF-8, and
 
 `type` must be one of the five below, then you add the matching config block:
 
-<div style="display:flex;flex-wrap:wrap;gap:8px;margin:12px 0;">
-  <span style="background:#eef2ff;border:1px solid #c7d2fe;color:#3730a3;padding:4px 12px;border-radius:999px;font-size:13px;font-weight:600;">theme</span>
-  <span style="background:#ecfdf5;border:1px solid #a7f3d0;color:#065f46;padding:4px 12px;border-radius:999px;font-size:13px;font-weight:600;">skin</span>
-  <span style="background:#fff7ed;border:1px solid #fed7aa;color:#9a3412;padding:4px 12px;border-radius:999px;font-size:13px;font-weight:600;">game</span>
-  <span style="background:#f0f9ff;border:1px solid #bae6fd;color:#075985;padding:4px 12px;border-radius:999px;font-size:13px;font-weight:600;">widget</span>
-  <span style="background:#fdf4ff;border:1px solid #f5d0fe;color:#86198f;padding:4px 12px;border-radius:999px;font-size:13px;font-weight:600;">locale</span>
+<div style="display:flex;flex-wrap:wrap;gap:8px;margin:14px 0;">
+  <span style="background:#eef0fa;border:1px solid #c7ccef;color:#3b44b8;padding:5px 14px;border-radius:999px;font-size:13px;font-weight:500;">theme</span>
+  <span style="background:#eef7f1;border:1px solid #c2e2cb;color:#1e7a3a;padding:5px 14px;border-radius:999px;font-size:13px;font-weight:500;">skin</span>
+  <span style="background:#faf4ef;border:1px solid #f0d7c2;color:#a8542a;padding:5px 14px;border-radius:999px;font-size:13px;font-weight:500;">game</span>
+  <span style="background:#eef5fa;border:1px solid #c2dcec;color:#2a6a9a;padding:5px 14px;border-radius:999px;font-size:13px;font-weight:500;">widget</span>
+  <span style="background:#faf0f7;border:1px solid #e8c5de;color:#9a3a7a;padding:5px 14px;border-radius:999px;font-size:13px;font-weight:500;">locale</span>
 </div>
 
 Sample plugins set `minPanelVersion` to `3.5.0`.
@@ -393,8 +393,8 @@ Asset paths in `index.html` must be relative to that HTML file itself:
 </html>
 ```
 
-<div style="background:#fef2f2;border:1px solid #fecaca;border-left:4px solid #ef4444;border-radius:6px;padding:12px 16px;margin:16px 0;">
-  <strong style="color:#991b1b;">Don't get the path wrong</strong><br>
+<div style="background:#faf6f6;border:1px solid #ecd5d5;border-left:3px solid #b5453a;border-radius:4px;padding:14px 18px;margin:20px 0;">
+  <strong style="color:#8a2e25;">Don't get the path wrong</strong><br>
   Don't write <code>/assets/player.webp</code> — that's the panel's own directory, not your plugin. If you get a white screen, open these two URLs directly in the browser dev tools:
   <pre style="background:#1e1e1e;color:#e0e0e0;padding:10px;border-radius:4px;margin:8px 0;overflow-x:auto;font-size:13px;">/api/plugins/saki-game-demo/assets/index.html
 /api/plugins/saki-game-demo/assets/assets/player.webp</pre>
@@ -496,8 +496,8 @@ Don't install two packs for the same `language` — the later one overwrites the
 
 The `icon` image is drawn with `object-fit: cover` on the Workshop card. Make it a **4:3 landscape** webp, 1600×1200 if you can. Keep the subject centred. A cut-out character on a black background becomes an ugly slice in the card.
 
-<div style="background:#eef2ff;border:1px solid #c7d2fe;border-left:4px solid #6366f1;border-radius:6px;padding:12px 16px;margin:16px 0;">
-  <strong style="color:#3730a3;">Tip</strong><br>
+<div style="background:#f6f7fb;border:1px solid #e2e6f0;border-left:3px solid #1f4bff;border-radius:4px;padding:14px 18px;margin:20px 0;">
+  <strong style="color:#1f4bff;">Tip</strong><br>
   Don't paint the plugin name onto the image — it's already shown via <code>displayName</code>.
 </div>
 

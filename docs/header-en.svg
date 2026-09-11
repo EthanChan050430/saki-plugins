@@ -1,4 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1100" height="168" viewBox="0 0 1100 168" role="img" aria-label="Saki Panel plugin guide">
+<svg xmlns="http://www.w3.org/2000/svg" width="1100" height="168" viewBox="0 0 1100 168" role="img" aria-label="Saki Panel Plugin Development Wiki">
   <style>
     .paper { fill: #ece7dc; }
     .ink { fill: #12141a; }
@@ -26,6 +26,6 @@
   <rect class="cobalt" x="1054" y="24" width="22" height="22"/>
   <polygon class="ink" points="1088,118 1100,148 1070,148"/>
   <text class="sub mute" x="36" y="48">SAKI PANEL  ·  PLUGIN GUIDE</text>
-  <text class="title ink" x="36" y="98">From an empty folder to the Workshop</text>
+  <text class="title ink" x="36" y="98">Plugin Development Wiki</text>
   <text class="sub mute" x="36" y="136">MANIFEST · THEME · SKIN · GAME · WIDGET · LOCALE</text>
 </svg>

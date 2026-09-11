@@ -84,8 +84,8 @@ html.saki-plugin-theme-demo {
 
 然后打开扩展工坊，应该能看到「我的第一份主题」。点 **应用主题**，如果主色从粉色变成蓝色，就说明清单、CSS、htmlClass 这三步都走通了。之后想加侧栏、登录页、圆角，都在这份 CSS 里接着写。
 
-<div style="background:#fff8e6;border:1px solid #f0d98c;border-left:4px solid #f0b429;border-radius:6px;padding:12px 16px;margin:16px 0;">
-  <strong style="color:#9a6700;">关于 <code>name</code> 字段</strong><br>
+<div style="background:#faf8f3;border:1px solid #ece4d3;border-left:3px solid #c99a2e;border-radius:4px;padding:14px 18px;margin:20px 0;">
+  <strong style="color:#8a6a18;">关于 <code>name</code> 字段</strong><br>
   <code>name</code> 会变成插件的 id，也是文件夹名。只能用字母、数字、下划线、连字符，而且必须以字母或数字开头。<strong>装好之后不要随便改 <code>name</code></strong>，改了就等于换了一个新插件，旧的还在。
 </div>
 
@@ -112,36 +112,36 @@ saki-plugins/
 
 装完之后，不同类型的插件行为不一样：
 
-<table>
+<table style="border-collapse:collapse;width:100%;font-size:14px;margin:8px 0;">
   <tr>
-    <th width="120">你写的 type</th>
-    <th>面板会做什么</th>
-    <th>你还要点一下</th>
+    <th width="120" style="text-align:left;padding:10px 14px;border-bottom:2px solid #1f4bff;color:#1f4bff;">你写的 type</th>
+    <th style="text-align:left;padding:10px 14px;border-bottom:2px solid #1f4bff;color:#1f4bff;">面板会做什么</th>
+    <th style="text-align:left;padding:10px 14px;border-bottom:2px solid #1f4bff;color:#1f4bff;">你还要点一下</th>
   </tr>
   <tr>
-    <td><code>theme</code></td>
-    <td>插入一个 <code>&lt;link&gt;</code> 指向你的 CSS，给 <code>&lt;html&gt;</code> 加上 <code>htmlClass</code></td>
-    <td><strong>应用主题</strong>。同时只能用一套。登录页没登录时也会加载当前主题。</td>
+    <td style="padding:10px 14px;border-bottom:1px solid #eef0f4;vertical-align:top;"><code>theme</code></td>
+    <td style="padding:10px 14px;border-bottom:1px solid #eef0f4;vertical-align:top;">插入一个 <code>&lt;link&gt;</code> 指向你的 CSS，给 <code>&lt;html&gt;</code> 加上 <code>htmlClass</code></td>
+    <td style="padding:10px 14px;border-bottom:1px solid #eef0f4;vertical-align:top;"><strong>应用主题</strong>。同时只能用一套。登录页没登录时也会加载当前主题。</td>
   </tr>
   <tr>
-    <td><code>skin</code></td>
-    <td>按 <code>/assets/</code> 下的相对路径替换图片</td>
-    <td><strong>更换形象</strong>。同时只能用一套。没提供的路径还是用原图。</td>
+    <td style="padding:10px 14px;border-bottom:1px solid #eef0f4;vertical-align:top;"><code>skin</code></td>
+    <td style="padding:10px 14px;border-bottom:1px solid #eef0f4;vertical-align:top;">按 <code>/assets/</code> 下的相对路径替换图片</td>
+    <td style="padding:10px 14px;border-bottom:1px solid #eef0f4;vertical-align:top;"><strong>更换形象</strong>。同时只能用一套。没提供的路径还是用原图。</td>
   </tr>
   <tr>
-    <td><code>game</code></td>
-    <td>用沙箱 iframe 打开 <code>game.entry</code></td>
-    <td><strong>开始游玩</strong>，或者在 Saki 手机里打开。</td>
+    <td style="padding:10px 14px;border-bottom:1px solid #eef0f4;vertical-align:top;"><code>game</code></td>
+    <td style="padding:10px 14px;border-bottom:1px solid #eef0f4;vertical-align:top;">用沙箱 iframe 打开 <code>game.entry</code></td>
+    <td style="padding:10px 14px;border-bottom:1px solid #eef0f4;vertical-align:top;"><strong>开始游玩</strong>，或者在 Saki 手机里打开。</td>
   </tr>
   <tr>
-    <td><code>widget</code></td>
-    <td>同样是沙箱 iframe</td>
-    <td><strong>启用</strong>。没有「应用」按钮。</td>
+    <td style="padding:10px 14px;border-bottom:1px solid #eef0f4;vertical-align:top;"><code>widget</code></td>
+    <td style="padding:10px 14px;border-bottom:1px solid #eef0f4;vertical-align:top;">同样是沙箱 iframe</td>
+    <td style="padding:10px 14px;border-bottom:1px solid #eef0f4;vertical-align:top;"><strong>启用</strong>。没有「应用」按钮。</td>
   </tr>
   <tr>
-    <td><code>locale</code></td>
-    <td>把 JSON 词典加入语言列表</td>
-    <td><strong>启用</strong>，再去 <strong>系统设置 → 面板语言</strong> 里选。</td>
+    <td style="padding:10px 14px;border-bottom:1px solid #eef0f4;vertical-align:top;"><code>locale</code></td>
+    <td style="padding:10px 14px;border-bottom:1px solid #eef0f4;vertical-align:top;">把 JSON 词典加入语言列表</td>
+    <td style="padding:10px 14px;border-bottom:1px solid #eef0f4;vertical-align:top;"><strong>启用</strong>，再去 <strong>系统设置 → 面板语言</strong> 里选。</td>
   </tr>
 </table>
 
@@ -175,12 +175,12 @@ saki-plugins/
 
 `type` 只能是下面五种之一，然后补上对应的配置块：
 
-<div style="display:flex;flex-wrap:wrap;gap:8px;margin:12px 0;">
-  <span style="background:#eef2ff;border:1px solid #c7d2fe;color:#3730a3;padding:4px 12px;border-radius:999px;font-size:13px;font-weight:600;">theme 主题</span>
-  <span style="background:#ecfdf5;border:1px solid #a7f3d0;color:#065f46;padding:4px 12px;border-radius:999px;font-size:13px;font-weight:600;">skin 形象</span>
-  <span style="background:#fff7ed;border:1px solid #fed7aa;color:#9a3412;padding:4px 12px;border-radius:999px;font-size:13px;font-weight:600;">game 游戏</span>
-  <span style="background:#f0f9ff;border:1px solid #bae6fd;color:#075985;padding:4px 12px;border-radius:999px;font-size:13px;font-weight:600;">widget 组件</span>
-  <span style="background:#fdf4ff;border:1px solid #f5d0fe;color:#86198f;padding:4px 12px;border-radius:999px;font-size:13px;font-weight:600;">locale 语言</span>
+<div style="display:flex;flex-wrap:wrap;gap:8px;margin:14px 0;">
+  <span style="background:#eef0fa;border:1px solid #c7ccef;color:#3b44b8;padding:5px 14px;border-radius:999px;font-size:13px;font-weight:500;">theme 主题</span>
+  <span style="background:#eef7f1;border:1px solid #c2e2cb;color:#1e7a3a;padding:5px 14px;border-radius:999px;font-size:13px;font-weight:500;">skin 形象</span>
+  <span style="background:#faf4ef;border:1px solid #f0d7c2;color:#a8542a;padding:5px 14px;border-radius:999px;font-size:13px;font-weight:500;">game 游戏</span>
+  <span style="background:#eef5fa;border:1px solid #c2dcec;color:#2a6a9a;padding:5px 14px;border-radius:999px;font-size:13px;font-weight:500;">widget 组件</span>
+  <span style="background:#faf0f7;border:1px solid #e8c5de;color:#9a3a7a;padding:5px 14px;border-radius:999px;font-size:13px;font-weight:500;">locale 语言</span>
 </div>
 
 样例插件都把 `minPanelVersion` 写成 `3.5.0`。
@@ -393,8 +393,8 @@ saki-game-demo/
 </html>
 ```
 
-<div style="background:#fef2f2;border:1px solid #fecaca;border-left:4px solid #ef4444;border-radius:6px;padding:12px 16px;margin:16px 0;">
-  <strong style="color:#991b1b;">路径别写错</strong><br>
+<div style="background:#faf6f6;border:1px solid #ecd5d5;border-left:3px solid #b5453a;border-radius:4px;padding:14px 18px;margin:20px 0;">
+  <strong style="color:#8a2e25;">路径别写错</strong><br>
   不要写成 <code>/assets/player.webp</code>，那是面板自己的目录，不是你的插件。白屏的时候，用浏览器开发者工具直接打开这两个地址看看：
   <pre style="background:#1e1e1e;color:#e0e0e0;padding:10px;border-radius:4px;margin:8px 0;overflow-x:auto;font-size:13px;">/api/plugins/saki-game-demo/assets/index.html
 /api/plugins/saki-game-demo/assets/assets/player.webp</pre>
@@ -496,8 +496,8 @@ saki-locale-fr/
 
 `icon` 字段对应的图，会被工坊卡片用 `object-fit: cover` 铺满。所以要做成 **4:3 横版** 的 webp，建议 1600×1200。主体放在中间。纯黑底的立绘在卡片里会被裁成一块难看的切片。
 
-<div style="background:#eef2ff;border:1px solid #c7d2fe;border-left:4px solid #6366f1;border-radius:6px;padding:12px 16px;margin:16px 0;">
-  <strong style="color:#3730a3;">小提示</strong><br>
+<div style="background:#f6f7fb;border:1px solid #e2e6f0;border-left:3px solid #1f4bff;border-radius:4px;padding:14px 18px;margin:20px 0;">
+  <strong style="color:#1f4bff;">小提示</strong><br>
   不要把插件名字画进图里，名字已经通过 <code>displayName</code> 显示了。
 </div>
 

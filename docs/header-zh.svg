@@ -1,4 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1100" height="168" viewBox="0 0 1100 168" role="img" aria-label="Saki Panel 插件开发">
+<svg xmlns="http://www.w3.org/2000/svg" width="1100" height="168" viewBox="0 0 1100 168" role="img" aria-label="Saki Panel 插件开发 Wiki">
   <style>
     .paper { fill: #ece7dc; }
     .ink { fill: #12141a; }
@@ -26,6 +26,6 @@
   <rect class="cobalt" x="1054" y="24" width="22" height="22"/>
   <polygon class="ink" points="1088,118 1100,148 1070,148"/>
   <text class="sub mute" x="36" y="48">SAKI PANEL  ·  PLUGIN GUIDE</text>
-  <text class="title ink" x="36" y="98">从空白文件夹写到上架</text>
+  <text class="title ink" x="36" y="98">插件开发 Wiki</text>
   <text class="sub mute" x="36" y="136">清单 · 主题 · 形象 · 游戏 · 组件 · 语言</text>
 </svg>
