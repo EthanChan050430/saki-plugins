@@ -7,9 +7,9 @@
   "type": "locale",
   "minPanelVersion": "3.5.0",
   "locale": {
-    "code": "ja-JP",
+    "language": "ja-JP",
+    "translations": "ja.json",
     "label": "日本語",
-    "flag": "🇯🇵",
-    "file": "ja.json"
+    "flag": "🇯🇵"
   }
 }
