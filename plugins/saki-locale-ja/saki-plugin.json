@@ -1,0 +1,15 @@
+{
+  "name": "saki-locale-ja",
+  "version": "1.0.0",
+  "displayName": "日本語",
+  "description": "UI を日本語にローカライズ。メニュー、ボタン、通知、エラーメッセージなどを一括翻訳。",
+  "author": "DreamStarry",
+  "type": "locale",
+  "minPanelVersion": "3.5.0",
+  "locale": {
+    "code": "ja-JP",
+    "label": "日本語",
+    "flag": "🇯🇵",
+    "file": "ja.json"
+  }
+}
