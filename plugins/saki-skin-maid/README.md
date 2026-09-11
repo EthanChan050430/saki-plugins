@@ -1,6 +1,8 @@
 # 女仆装
 
-Saki 形象扩展。按面板 `/assets/` 同路径覆盖立绘。开发说明见仓库根目录 [README](../../README.md#形象-skin)。
+Saki 形象扩展。按面板 `/assets/` 同路径覆盖立绘。
+
+开发说明：[中文](../../README.md#形象) · [English](../../README.en.md#skins)
 
 ## 表情动作
 
