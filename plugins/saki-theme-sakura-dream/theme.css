@@ -28,6 +28,23 @@
   --shadow-glow: 0 0 20px rgba(244, 114, 182, 0.25) !important;
 }
 
+/* 全局 2.5K 唯美动漫樱花背景图层 */
+body::before {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-image: url("/api/plugins/saki-theme-sakura-dream/assets/sakura_bg.webp");
+  background-size: cover;
+  background-position: center bottom;
+  background-repeat: no-repeat;
+  opacity: 0.18;
+  pointer-events: none;
+  z-index: -1;
+}
+
 /* 激活状态按钮与选项卡发光 */
 .nav-item-dashboard.active,
 .nav-item-instances.active,

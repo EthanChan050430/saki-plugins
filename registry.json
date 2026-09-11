@@ -2,12 +2,12 @@
   {
     "name": "saki-theme-sakura-dream",
     "displayName": "樱花梦境 (Sakura Dream)",
-    "description": "柔和粉白主题配色，提供半透明磨砂玻璃卡片与温和的状态高亮，适配日间与夜间环境。",
+    "description": "柔和粉白主题配色，提供 2.5K 唯美樱花背景、半透明磨砂玻璃卡片与温和的状态高亮，适配日间与夜间环境。",
     "author": "SakiCommunity",
     "type": "theme",
     "version": "1.0.0",
     "repo": "EthanChan050430/saki-plugins",
-    "icon": "preview.svg",
+    "icon": "preview.png",
     "stars": 158,
     "downloads": 720,
     "featured": true
@@ -15,12 +15,12 @@
   {
     "name": "saki-skin-cyber-maid",
     "displayName": "赛博女仆 (Cyber Maid)",
-    "description": "蓝白科技配色的 Saki 形象扩展包，包含配套的状态表情、交互动作与桌面宠物贴图。",
+    "description": "蓝白科技配色的 Saki 形象扩展包，包含配套的无损透明状态表情、交互动作与桌面宠物贴图。",
     "author": "DreamStarry",
     "type": "skin",
     "version": "1.0.0",
     "repo": "EthanChan050430/saki-plugins",
-    "icon": "preview.svg",
+    "icon": "preview.png",
     "stars": 340,
     "downloads": 1420,
     "featured": true
@@ -33,7 +33,7 @@
     "type": "widget",
     "version": "1.0.0",
     "repo": "EthanChan050430/saki-plugins",
-    "icon": "preview.svg",
+    "icon": "preview.png",
     "stars": 180,
     "downloads": 730,
     "featured": true
@@ -41,12 +41,12 @@
   {
     "name": "saki-game-dessert-catcher",
     "displayName": "Saki 甜点大作战 (Dessert Catcher)",
-    "description": "休闲解压小游戏：移动托盘接取随机掉落的甜点并避开阻碍，支持键盘与触屏操作。",
+    "description": "休闲解压街机游戏：包含精美 3D 甜品贴图，移动托盘接取随机掉落的甜点与星星，支持键盘与触屏操作。",
     "author": "PixelBaker",
     "type": "game",
     "version": "1.0.0",
     "repo": "EthanChan050430/saki-plugins",
-    "icon": "preview.svg",
+    "icon": "preview.png",
     "stars": 412,
     "downloads": 2150,
     "featured": true

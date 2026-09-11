@@ -5,7 +5,7 @@
   "description": "休闲解压小游戏：移动托盘接取随机掉落的甜点并避开阻碍，支持键盘与触屏操作。",
   "author": "PixelBaker",
   "type": "game",
-  "icon": "preview.svg",
+  "icon": "preview.png",
   "minPanelVersion": "3.5.0",
   "game": {
     "entry": "index.html",

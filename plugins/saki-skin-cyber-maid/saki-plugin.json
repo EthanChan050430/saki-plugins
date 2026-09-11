@@ -5,26 +5,26 @@
   "description": "蓝白科技配色的 Saki 形象扩展包，包含配套的状态表情、交互动作与桌面宠物贴图。",
   "author": "DreamStarry",
   "type": "skin",
-  "icon": "preview.svg",
+  "icon": "preview.png",
   "minPanelVersion": "3.5.0",
   "skin": {
     "expressions": "expressions",
     "pet": "pet",
     "mapping": {
-      "avatar": "expressions/normal.svg",
-      "launcher": "expressions/normal.svg",
-      "launcherHover": "expressions/happy.svg",
-      "normal": "expressions/normal.svg",
-      "happy": "expressions/happy.svg",
-      "thinking": "expressions/thinking.svg",
-      "shy": "expressions/shy.svg",
-      "pout": "expressions/pout.svg",
-      "gaming": "expressions/gaming.svg",
-      "petSit": "pet/sit.svg",
-      "petWalk": "pet/walk.svg",
-      "petSleep": "pet/sleep.svg",
-      "petLie": "pet/lie.svg",
-      "lie": "pet/lie.svg"
+      "avatar": "expressions/normal.png",
+      "launcher": "expressions/normal.png",
+      "launcherHover": "expressions/happy.png",
+      "normal": "expressions/normal.png",
+      "happy": "expressions/happy.png",
+      "thinking": "expressions/thinking.png",
+      "shy": "expressions/shy.png",
+      "pout": "expressions/pout.png",
+      "gaming": "expressions/gaming.png",
+      "petSit": "pet/sit.png",
+      "petWalk": "pet/walk.png",
+      "petSleep": "pet/sleep.png",
+      "petLie": "pet/lie.png",
+      "lie": "pet/lie.png"
     }
   }
 }

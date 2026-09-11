@@ -130,13 +130,21 @@
     let gameOver = false;
     let gameStarted = false;
 
+    // Sprite assets
+    const spriteBg = new Image(); spriteBg.src = 'assets/bg.jpg';
+    const spritePlayer = new Image(); spritePlayer.src = 'assets/player.png';
+    const spriteCake = new Image(); spriteCake.src = 'assets/cake.png';
+    const spriteStar = new Image(); spriteStar.src = 'assets/star.png';
+    const spriteMacaron = new Image(); spriteMacaron.src = 'assets/macaron.png';
+    const spriteChili = new Image(); spriteChili.src = 'assets/chili.png';
+
     // Saki Player
     const player = {
-      x: canvas.width / 2 - 40,
-      y: canvas.height - 70,
-      width: 80,
-      height: 50,
-      speed: 7,
+      x: canvas.width / 2 - 45,
+      y: canvas.height - 85,
+      width: 90,
+      height: 75,
+      speed: 7.5,
       vx: 0
     };
 
@@ -146,10 +154,10 @@
     const floatingTexts = [];
 
     const ITEM_TYPES = [
-      { type: 'macaron', score: 10, emoji: '🧁', speed: 2.6, chance: 0.45 },
-      { type: 'cake', score: 25, emoji: '🍰', speed: 3.2, chance: 0.25 },
-      { type: 'star', score: 50, emoji: '⭐', speed: 3.8, chance: 0.15 },
-      { type: 'chili', score: 0, emoji: '🌶️', speed: 3.5, chance: 0.15, isHazard: true }
+      { type: 'macaron', score: 10, emoji: '🧁', speed: 2.6, chance: 0.45, size: 40 },
+      { type: 'cake', score: 25, emoji: '🍰', speed: 3.2, chance: 0.25, size: 46 },
+      { type: 'star', score: 50, emoji: '⭐', speed: 3.8, chance: 0.15, size: 42 },
+      { type: 'chili', score: 0, emoji: '🌶️', speed: 3.5, chance: 0.15, size: 36, isHazard: true }
     ];
 
     function spawnItem() {
@@ -332,12 +340,19 @@
     function draw() {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-      // Starfield background
-      ctx.fillStyle = 'rgba(255, 255, 255, 0.15)';
-      for (let i = 0; i < 20; i++) {
-        const sx = (i * 37 + 23) % canvas.width;
-        const sy = (i * 59 + 17) % canvas.height;
-        ctx.fillRect(sx, sy, 1.5, 1.5);
+      // Background
+      if (spriteBg.complete && spriteBg.naturalWidth > 0) {
+        ctx.drawImage(spriteBg, 0, 0, canvas.width, canvas.height);
+        ctx.fillStyle = 'rgba(15, 7, 40, 0.45)';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+      } else {
+        // Starfield background fallback
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.15)';
+        for (let i = 0; i < 20; i++) {
+          const sx = (i * 37 + 23) % canvas.width;
+          const sy = (i * 59 + 17) % canvas.height;
+          ctx.fillRect(sx, sy, 1.5, 1.5);
+        }
       }
 
       if (!gameStarted) {
@@ -359,40 +374,58 @@
         ctx.save();
         ctx.translate(item.x + item.size / 2, item.y + item.size / 2);
         ctx.rotate(item.rot);
-        ctx.font = `${item.size}px serif`;
-        ctx.textAlign = 'center';
-        ctx.textBaseline = 'middle';
-        ctx.fillText(item.emoji, 0, 0);
+        let drawn = false;
+        let targetImg = null;
+        if (item.type === 'cake') targetImg = spriteCake;
+        else if (item.type === 'star') targetImg = spriteStar;
+        else if (item.type === 'macaron') targetImg = spriteMacaron;
+        else if (item.type === 'chili') targetImg = spriteChili;
+
+        if (targetImg && targetImg.complete && targetImg.naturalWidth > 0) {
+          ctx.drawImage(targetImg, -item.size / 2, -item.size / 2, item.size, item.size);
+          drawn = true;
+        }
+        if (!drawn) {
+          ctx.font = `${item.size}px serif`;
+          ctx.textAlign = 'center';
+          ctx.textBaseline = 'middle';
+          ctx.fillText(item.emoji, 0, 0);
+        }
         ctx.restore();
       }
 
-      // Draw Player: Saki with Dessert Plate
-      // Plate
-      ctx.fillStyle = 'rgba(255, 255, 255, 0.9)';
-      ctx.beginPath();
-      ctx.ellipse(player.x + player.width / 2, player.y + 10, player.width / 2, 8, 0, 0, Math.PI * 2);
-      ctx.fill();
-      ctx.strokeStyle = '#f472b6';
-      ctx.lineWidth = 2;
-      ctx.stroke();
+      // Draw Player: Saki Chibi with Dessert Plate
+      if (spritePlayer.complete && spritePlayer.naturalWidth > 0) {
+        ctx.save();
+        ctx.shadowColor = 'rgba(244, 114, 182, 0.6)';
+        ctx.shadowBlur = 16;
+        ctx.drawImage(spritePlayer, player.x, player.y - 12, player.width, player.height + 12);
+        ctx.restore();
+      } else {
+        // Fallback plate
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.9)';
+        ctx.beginPath();
+        ctx.ellipse(player.x + player.width / 2, player.y + 10, player.width / 2, 8, 0, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.strokeStyle = '#f472b6';
+        ctx.lineWidth = 2;
+        ctx.stroke();
 
-      // Saki mini head peeking under plate
-      ctx.fillStyle = '#38bdf8';
-      ctx.beginPath();
-      ctx.arc(player.x + player.width / 2, player.y + 35, 18, 0, Math.PI * 2);
-      ctx.fill();
-      // Face
-      ctx.fillStyle = '#ffe4e6';
-      ctx.beginPath();
-      ctx.arc(player.x + player.width / 2, player.y + 36, 14, 0, Math.PI * 2);
-      ctx.fill();
-      // Eyes ^_^
-      ctx.strokeStyle = '#1e1b4b';
-      ctx.lineWidth = 1.5;
-      ctx.beginPath();
-      ctx.arc(player.x + player.width / 2 - 5, player.y + 35, 3, Math.PI, 0);
-      ctx.arc(player.x + player.width / 2 + 5, player.y + 35, 3, Math.PI, 0);
-      ctx.stroke();
+        ctx.fillStyle = '#38bdf8';
+        ctx.beginPath();
+        ctx.arc(player.x + player.width / 2, player.y + 35, 18, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.fillStyle = '#ffe4e6';
+        ctx.beginPath();
+        ctx.arc(player.x + player.width / 2, player.y + 36, 14, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.strokeStyle = '#1e1b4b';
+        ctx.lineWidth = 1.5;
+        ctx.beginPath();
+        ctx.arc(player.x + player.width / 2 - 5, player.y + 35, 3, Math.PI, 0);
+        ctx.arc(player.x + player.width / 2 + 5, player.y + 35, 3, Math.PI, 0);
+        ctx.stroke();
+      }
 
       // Particles
       for (const p of particles) {

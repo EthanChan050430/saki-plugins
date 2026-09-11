@@ -5,7 +5,7 @@
   "description": "柔和粉白主题配色，提供半透明磨砂玻璃卡片与温和的状态高亮，适配日间与夜间环境。",
   "author": "SakiCommunity",
   "type": "theme",
-  "icon": "preview.svg",
+  "icon": "preview.png",
   "minPanelVersion": "3.5.0",
   "theme": {
     "css": "theme.css"

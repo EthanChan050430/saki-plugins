@@ -5,7 +5,7 @@
   "description": "轻量级快速运维卡片：网页网络测速、快捷记事便签、常用命令速查与时间戳互转。",
   "author": "DevCat",
   "type": "widget",
-  "icon": "preview.svg",
+  "icon": "preview.png",
   "minPanelVersion": "3.5.0",
   "widget": {
     "entry": "index.html",
