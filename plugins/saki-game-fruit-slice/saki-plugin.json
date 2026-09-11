@@ -1,0 +1,16 @@
+{
+  "name": "saki-game-fruit-slice",
+  "version": "1.0.0",
+  "displayName": "切水果",
+  "description": "街机切水果：滑动切开飞来的水果，避开炸弹，连击越高分越高。",
+  "author": "DreamStarry",
+  "type": "game",
+  "icon": "preview.webp",
+  "minPanelVersion": "3.5.0",
+  "game": {
+    "entry": "index.html",
+    "title": "切水果",
+    "width": 720,
+    "height": 540
+  }
+}

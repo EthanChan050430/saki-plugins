@@ -1,0 +1,178 @@
+/* 简约几何 — chamfered rectangles, no round corners, cobalt accent */
+
+:root,
+html.saki-plugin-theme-geo {
+  --radius-control: 0px !important;
+  --radius-control-sm: 0px !important;
+  --radius-modal: 0px !important;
+  --radius-card: 0px !important;
+  --radius-chip: 0px !important;
+
+  --primary: #2563eb !important;
+  --primary-hover: #1d4ed8 !important;
+  --primary-light: rgba(37, 99, 235, 0.12) !important;
+  --sidebar-accent: #2563eb !important;
+  --sidebar-accent-bg: rgba(37, 99, 235, 0.1) !important;
+  --sidebar-accent-hover: rgba(37, 99, 235, 0.16) !important;
+  --heading-gradient-from: #1e293b !important;
+  --heading-gradient-to: #2563eb !important;
+  --tag-bg: rgba(37, 99, 235, 0.1) !important;
+  --tag-border: rgba(37, 99, 235, 0.35) !important;
+  --tag-text: #2563eb !important;
+  --scrollbar-thumb: rgba(37, 99, 235, 0.35) !important;
+  --scrollbar-thumb-hover: rgba(37, 99, 235, 0.55) !important;
+
+  --glass-bg: #f4f4f2 !important;
+  --glass-border: #d4d4d0 !important;
+  --glass-shadow: 0 12px 0 rgba(15, 23, 42, 0.08) !important;
+  --surface-bg: #f7f7f4 !important;
+  --surface-bg-hover: #ffffff !important;
+  --surface-bg-strong: #ffffff !important;
+  --surface-border: #d6d6d1 !important;
+  --text-dark: #111827 !important;
+  --text-secondary: #4b5563 !important;
+
+  --app-background-image: var(--plugin-theme-bg-light, url("./bg-light.webp")) !important;
+}
+
+[data-theme="dark"],
+html.saki-plugin-theme-geo[data-theme="dark"] {
+  --primary: #60a5fa !important;
+  --primary-hover: #93c5fd !important;
+  --primary-light: rgba(96, 165, 250, 0.16) !important;
+  --sidebar-accent: #60a5fa !important;
+  --glass-bg: #16181d !important;
+  --glass-border: #2a2e36 !important;
+  --glass-shadow: 0 16px 0 rgba(0, 0, 0, 0.35) !important;
+  --surface-bg: rgba(22, 24, 29, 0.92) !important;
+  --surface-bg-hover: #1c2028 !important;
+  --surface-bg-strong: #1a1d24 !important;
+  --surface-border: #2f3540 !important;
+  --text-dark: #f3f4f6 !important;
+  --text-secondary: #9ca3af !important;
+  --app-background-image: var(--plugin-theme-bg-dark, url("./bg-dark.webp")) !important;
+}
+
+html.saki-plugin-theme-geo .primary-button,
+html.saki-plugin-theme-geo .secondary-button,
+html.saki-plugin-theme-geo .button.secondary-button,
+html.saki-plugin-theme-geo .ghost-button,
+html.saki-plugin-theme-geo .small-button,
+html.saki-plugin-theme-geo .icon-button,
+html.saki-plugin-theme-geo .plugin-tab-btn,
+html.saki-plugin-theme-geo .plugin-filter-chip,
+html.saki-plugin-theme-geo .plugin-mirror-test-btn,
+html.saki-plugin-theme-geo button:not(.saki-character-art):not([class*="mac-"]) {
+  border-radius: 0 !important;
+  clip-path: polygon(
+    8px 0,
+    calc(100% - 8px) 0,
+    100% 8px,
+    100% calc(100% - 8px),
+    calc(100% - 8px) 100%,
+    8px 100%,
+    0 calc(100% - 8px),
+    0 8px
+  );
+}
+
+html.saki-plugin-theme-geo .primary-button {
+  background: #2563eb !important;
+  box-shadow: 6px 6px 0 #0f172a !important;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+html.saki-plugin-theme-geo .primary-button:hover:not(:disabled) {
+  background: #1d4ed8 !important;
+  box-shadow: 4px 4px 0 #0f172a !important;
+}
+
+html.saki-plugin-theme-geo .secondary-button,
+html.saki-plugin-theme-geo .ghost-button,
+html.saki-plugin-theme-geo .small-button,
+html.saki-plugin-theme-geo .icon-button {
+  background: #ffffff !important;
+  border: 1px solid #111827 !important;
+  box-shadow: 4px 4px 0 rgba(17, 24, 39, 0.18) !important;
+  backdrop-filter: none !important;
+}
+
+html.saki-plugin-theme-geo[data-theme="dark"] .secondary-button,
+html.saki-plugin-theme-geo[data-theme="dark"] .ghost-button,
+html.saki-plugin-theme-geo[data-theme="dark"] .small-button,
+html.saki-plugin-theme-geo[data-theme="dark"] .icon-button {
+  background: #1c2028 !important;
+  border-color: #93c5fd !important;
+  color: #e5e7eb !important;
+}
+
+html.saki-plugin-theme-geo .modal-panel,
+html.saki-plugin-theme-geo .modal-backdrop > .modal-panel,
+html.saki-plugin-theme-geo .plugin-game-modal-container,
+html.saki-plugin-theme-geo .points-usage-modal,
+html.saki-plugin-theme-geo .account-modal,
+html.saki-plugin-theme-geo .glass-modal {
+  border-radius: 0 !important;
+  clip-path: polygon(
+    18px 0,
+    calc(100% - 18px) 0,
+    100% 18px,
+    100% calc(100% - 18px),
+    calc(100% - 18px) 100%,
+    18px 100%,
+    0 calc(100% - 18px),
+    0 18px
+  );
+  border: 2px solid #111827 !important;
+  box-shadow: 14px 14px 0 rgba(17, 24, 39, 0.18) !important;
+  backdrop-filter: none !important;
+  background: #fbfbf7 !important;
+}
+
+html.saki-plugin-theme-geo[data-theme="dark"] .modal-panel,
+html.saki-plugin-theme-geo[data-theme="dark"] .modal-backdrop > .modal-panel,
+html.saki-plugin-theme-geo[data-theme="dark"] .plugin-game-modal-container {
+  background: #16181d !important;
+  border-color: #60a5fa !important;
+  box-shadow: 14px 14px 0 rgba(0, 0, 0, 0.45) !important;
+}
+
+html.saki-plugin-theme-geo .modal-panel::before {
+  display: none !important;
+}
+
+html.saki-plugin-theme-geo .plugin-store-header,
+html.saki-plugin-theme-geo .plugin-card,
+html.saki-plugin-theme-geo .panel-card,
+html.saki-plugin-theme-geo .instance-card,
+html.saki-plugin-theme-geo .node-card,
+html.saki-plugin-theme-geo .plugin-mirror-bar,
+html.saki-plugin-theme-geo .plugin-toolbar,
+html.saki-plugin-theme-geo input,
+html.saki-plugin-theme-geo select,
+html.saki-plugin-theme-geo textarea,
+html.saki-plugin-theme-geo .saki-chip {
+  border-radius: 0 !important;
+}
+
+html.saki-plugin-theme-geo .nav-item-dashboard.active,
+html.saki-plugin-theme-geo .nav-item-instances.active,
+html.saki-plugin-theme-geo .nav-item-nodes.active,
+html.saki-plugin-theme-geo .nav-item-templates.active,
+html.saki-plugin-theme-geo .nav-item-users.active,
+html.saki-plugin-theme-geo .nav-item-audit.active,
+html.saki-plugin-theme-geo .nav-item-reliability.active,
+html.saki-plugin-theme-geo .nav-item-settings.active,
+html.saki-plugin-theme-geo .nav-item-about.active,
+html.saki-plugin-theme-geo .nav-item-plugins.active {
+  background: #2563eb !important;
+  color: #ffffff !important;
+  border-left: 0 !important;
+  clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 50%, calc(100% - 10px) 100%, 0 100%);
+}
+
+html.saki-plugin-theme-geo ::-webkit-scrollbar-thumb {
+  border-radius: 0 !important;
+  background: #2563eb !important;
+}

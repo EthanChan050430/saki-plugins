@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>切水果</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; user-select: none; -webkit-user-select: none; }
+    html, body {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background: #0b0705;
+      font-family: "Trebuchet MS", "Segoe UI", sans-serif;
+      color: #fff;
+      cursor: none;
+    }
+    #game {
+      display: block;
+      width: 100%;
+      height: 100%;
+      touch-action: none;
+    }
+    .hud {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      padding: 14px 18px;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      font-weight: 800;
+      letter-spacing: 0.04em;
+      text-shadow: 0 2px 0 #000, 0 0 12px rgba(0,0,0,0.6);
+    }
+    .score { font-size: 28px; color: #ffe082; }
+    .lives { font-size: 22px; color: #ff5252; }
+    .combo {
+      position: absolute;
+      left: 50%;
+      top: 18%;
+      transform: translateX(-50%);
+      font-size: 42px;
+      color: #ffeb3b;
+      opacity: 0;
+      pointer-events: none;
+      text-shadow: 0 3px 0 #c62828;
+      font-weight: 900;
+    }
+    .overlay {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: rgba(8, 5, 4, 0.55);
+      pointer-events: auto;
+      cursor: pointer;
+    }
+    .overlay h1 {
+      font-size: 56px;
+      letter-spacing: 0.12em;
+      margin-bottom: 8px;
+      color: #fff8e1;
+      text-shadow: 0 4px 0 #bf360c, 0 0 24px rgba(255, 80, 0, 0.5);
+    }
+    .overlay p { opacity: 0.85; margin-bottom: 22px; font-size: 15px; }
+    .overlay .start {
+      padding: 12px 28px;
+      border: 2px solid #ffe082;
+      background: rgba(191, 54, 12, 0.85);
+      color: #fff8e1;
+      font-size: 18px;
+      font-weight: 800;
+      letter-spacing: 0.14em;
+    }
+    .hidden { display: none !important; }
+  </style>
+</head>
+<body>
+  <canvas id="game"></canvas>
+  <div class="hud">
+    <div class="score">得分 <span id="score">0</span></div>
+    <div class="lives" id="lives">❤ ❤ ❤</div>
+  </div>
+  <div class="combo" id="combo"></div>
+  <div class="overlay" id="startOverlay">
+    <h1>切水果</h1>
+    <p>滑动切开水果 · 避开炸弹 · 连击加分</p>
+    <div class="start">点击开始</div>
+  </div>
+  <div class="overlay hidden" id="overOverlay">
+    <h1>结束</h1>
+    <p>得分 <span id="finalScore">0</span> · 最高 <span id="bestScore">0</span></p>
+    <div class="start">再来一局</div>
+  </div>
+  <script>
+    const canvas = document.getElementById("game");
+    const ctx = canvas.getContext("2d");
+    const scoreEl = document.getElementById("score");
+    const livesEl = document.getElementById("lives");
+    const comboEl = document.getElementById("combo");
+    const startOverlay = document.getElementById("startOverlay");
+    const overOverlay = document.getElementById("overOverlay");
+    const finalScoreEl = document.getElementById("finalScore");
+    const bestScoreEl = document.getElementById("bestScore");
+
+    const BEST_KEY = "saki-fruit-slice-best";
+    const FRUITS = [
+      { id: "watermelon", score: 12, juice: "#ff3d57", r: 54 },
+      { id: "apple", score: 8, juice: "#ff2d2d", r: 38 },
+      { id: "orange", score: 8, juice: "#ff9100", r: 36 },
+      { id: "banana", score: 10, juice: "#ffd54f", r: 44 },
+      { id: "pineapple", score: 14, juice: "#ffca28", r: 50 },
+      { id: "kiwi", score: 9, juice: "#7cb342", r: 34 }
+    ];
+
+    const images = {};
+    const loadImage = (src) => new Promise((resolve) => {
+      const img = new Image();
+      img.onload = () => resolve(img);
+      img.onerror = () => resolve(null);
+      img.src = src;
+    });
+
+    let W = 0, H = 0, dpr = 1;
+    let running = false;
+    let score = 0;
+    let lives = 3;
+    let combo = 0;
+    let comboUntil = 0;
+    let lastSliceAt = 0;
+    let waveTimer = 0;
+    let difficulty = 1;
+    const entities = [];
+    const particles = [];
+    const trail = [];
+    let pointerDown = false;
+    let audioCtx = null;
+
+    function resize() {
+      dpr = Math.min(window.devicePixelRatio || 1, 2);
+      W = canvas.clientWidth;
+      H = canvas.clientHeight;
+      canvas.width = Math.floor(W * dpr);
+      canvas.height = Math.floor(H * dpr);
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    }
+    window.addEventListener("resize", resize);
+
+    function beep(freq, dur, type, vol) {
+      try {
+        if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        if (audioCtx.state === "suspended") audioCtx.resume();
+        const t = audioCtx.currentTime;
+        const osc = audioCtx.createOscillator();
+        const g = audioCtx.createGain();
+        osc.type = type || "square";
+        osc.frequency.setValueAtTime(freq, t);
+        g.gain.setValueAtTime(vol || 0.08, t);
+        g.gain.exponentialRampToValueAtTime(0.001, t + dur);
+        osc.connect(g);
+        g.connect(audioCtx.destination);
+        osc.start(t);
+        osc.stop(t + dur);
+      } catch {}
+    }
+
+    function spawnWave() {
+      const n = Math.min(1 + Math.floor(Math.random() * (1 + difficulty)), 5);
+      const bombChance = Math.min(0.08 + difficulty * 0.03, 0.28);
+      for (let i = 0; i < n; i++) {
+        const isBomb = Math.random() < bombChance && n > 1;
+        const spec = FRUITS[Math.floor(Math.random() * FRUITS.length)];
+        const fromLeft = Math.random() < 0.5;
+        const x = fromLeft ? W * (0.1 + Math.random() * 0.35) : W * (0.55 + Math.random() * 0.35);
+        entities.push({
+          kind: isBomb ? "bomb" : "fruit",
+          spec,
+          x,
+          y: H + 40,
+          vx: (fromLeft ? 1 : -1) * (80 + Math.random() * 140),
+          vy: -(520 + Math.random() * 220 + difficulty * 20),
+          rot: Math.random() * Math.PI * 2,
+          vr: (Math.random() - 0.5) * 6,
+          r: isBomb ? 36 : spec.r,
+          sliced: false,
+          missed: false
+        });
+      }
+    }
+
+    function splat(x, y, color) {
+      for (let i = 0; i < 16; i++) {
+        const a = Math.random() * Math.PI * 2;
+        const s = 80 + Math.random() * 220;
+        particles.push({
+          x, y,
+          vx: Math.cos(a) * s,
+          vy: Math.sin(a) * s - 40,
+          life: 0.45 + Math.random() * 0.35,
+          max: 0.8,
+          color,
+          size: 3 + Math.random() * 6
+        });
+      }
+    }
+
+    function sliceEntity(e) {
+      if (e.sliced) return;
+      e.sliced = true;
+      if (e.kind === "bomb") {
+        beep(90, 0.5, "sawtooth", 0.16);
+        splat(e.x, e.y, "#222");
+        lives = 0;
+        endGame();
+        return;
+      }
+      const now = performance.now();
+      if (now - lastSliceAt < 420) combo += 1;
+      else combo = 1;
+      lastSliceAt = now;
+      comboUntil = now + 700;
+      const gained = e.spec.score * combo;
+      score += gained;
+      scoreEl.textContent = String(score);
+      splat(e.x, e.y, e.spec.juice);
+      beep(420 + combo * 80, 0.12, "triangle", 0.09);
+      if (combo >= 2) {
+        comboEl.textContent = combo + " 连击!";
+        comboEl.style.opacity = "1";
+        setTimeout(() => { comboEl.style.opacity = "0"; }, 500);
+      }
+      const halfVy = e.vy * 0.2;
+      entities.push(
+        { kind: "half", spec: e.spec, x: e.x - 8, y: e.y, vx: e.vx - 90, vy: halfVy - 40, rot: e.rot, vr: -4, r: e.r * 0.85, sliced: true, flip: 1 },
+        { kind: "half", spec: e.spec, x: e.x + 8, y: e.y, vx: e.vx + 90, vy: halfVy - 30, rot: e.rot, vr: 4, r: e.r * 0.85, sliced: true, flip: -1 }
+      );
+    }
+
+    function trailHits(e) {
+      if (trail.length < 2) return false;
+      for (let i = 1; i < trail.length; i++) {
+        const a = trail[i - 1];
+        const b = trail[i];
+        const dx = b.x - a.x;
+        const dy = b.y - a.y;
+        const len2 = dx * dx + dy * dy || 1;
+        let t = ((e.x - a.x) * dx + (e.y - a.y) * dy) / len2;
+        t = Math.max(0, Math.min(1, t));
+        const px = a.x + dx * t;
+        const py = a.y + dy * t;
+        const dist = Math.hypot(e.x - px, e.y - py);
+        if (dist < e.r * 0.78 && Math.hypot(dx, dy) > 8) return true;
+      }
+      return false;
+    }
+
+    function pointer(e, down) {
+      const rect = canvas.getBoundingClientRect();
+      const x = (e.clientX ?? (e.touches && e.touches[0].clientX) ?? 0) - rect.left;
+      const y = (e.clientY ?? (e.touches && e.touches[0].clientY) ?? 0) - rect.top;
+      if (down === true) pointerDown = true;
+      if (down === false) pointerDown = false;
+      if (pointerDown) {
+        trail.push({ x, y, t: performance.now() });
+        if (trail.length > 14) trail.shift();
+      }
+    }
+    canvas.addEventListener("pointerdown", (e) => { canvas.setPointerCapture(e.pointerId); pointer(e, true); });
+    canvas.addEventListener("pointermove", (e) => pointer(e));
+    canvas.addEventListener("pointerup", (e) => pointer(e, false));
+    canvas.addEventListener("pointercancel", () => { pointerDown = false; });
+
+    let last = 0;
+    function tick(ts) {
+      const dt = Math.min(0.033, (ts - last) / 1000 || 0.016);
+      last = ts;
+      ctx.clearRect(0, 0, W, H);
+
+      const bg = images.bg;
+      if (bg) {
+        const scale = Math.max(W / bg.width, H / bg.height);
+        const bw = bg.width * scale;
+        const bh = bg.height * scale;
+        ctx.drawImage(bg, (W - bw) / 2, (H - bh) / 2, bw, bh);
+        ctx.fillStyle = "rgba(0,0,0,0.28)";
+        ctx.fillRect(0, 0, W, H);
+      } else {
+        ctx.fillStyle = "#1a120c";
+        ctx.fillRect(0, 0, W, H);
+      }
+
+      if (running) {
+        waveTimer -= dt;
+        if (waveTimer <= 0) {
+          spawnWave();
+          waveTimer = Math.max(0.85, 1.7 - difficulty * 0.12);
+          difficulty += 0.08;
+        }
+
+        const g = 780;
+        for (const e of entities) {
+          e.vy += g * dt;
+          e.x += e.vx * dt;
+          e.y += e.vy * dt;
+          e.rot += e.vr * dt;
+          if (!e.sliced && e.kind !== "half" && pointerDown && trailHits(e)) sliceEntity(e);
+          if (!e.sliced && e.kind === "fruit" && !e.missed && e.y > H + 80 && e.vy > 0) {
+            e.missed = true;
+            lives = Math.max(0, lives - 1);
+            livesEl.textContent = "❤ ".repeat(lives).trim() || "—";
+            beep(160, 0.2, "sine", 0.08);
+            if (lives <= 0) endGame();
+          }
+        }
+        for (let i = entities.length - 1; i >= 0; i--) {
+          const e = entities[i];
+          if (e.y > H + 160 || e.x < -160 || e.x > W + 160) entities.splice(i, 1);
+        }
+        for (const p of particles) {
+          p.vy += 400 * dt;
+          p.x += p.vx * dt;
+          p.y += p.vy * dt;
+          p.life -= dt;
+        }
+        for (let i = particles.length - 1; i >= 0; i--) {
+          if (particles[i].life <= 0) particles.splice(i, 1);
+        }
+        const now = performance.now();
+        while (trail.length && now - trail[0].t > 140) trail.shift();
+        if (!pointerDown && trail.length) trail.shift();
+      }
+
+      for (const p of particles) {
+        ctx.globalAlpha = Math.max(0, p.life / p.max);
+        ctx.fillStyle = p.color;
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      ctx.globalAlpha = 1;
+
+      for (const e of entities) {
+        ctx.save();
+        ctx.translate(e.x, e.y);
+        ctx.rotate(e.rot);
+        if (e.flip === -1) ctx.scale(-1, 1);
+        const img = e.kind === "bomb"
+          ? images.bomb
+          : e.kind === "half"
+            ? (images[e.spec.id + "_half"] || images[e.spec.id])
+            : images[e.spec.id];
+        const size = e.r * 2.2;
+        if (img) ctx.drawImage(img, -size / 2, -size / 2, size, size);
+        else {
+          ctx.fillStyle = e.kind === "bomb" ? "#222" : (e.spec && e.spec.juice) || "#fff";
+          ctx.beginPath();
+          ctx.arc(0, 0, e.r, 0, Math.PI * 2);
+          ctx.fill();
+        }
+        ctx.restore();
+      }
+
+      if (trail.length > 1) {
+        ctx.lineCap = "round";
+        ctx.lineJoin = "round";
+        ctx.strokeStyle = "rgba(255,255,255,0.95)";
+        ctx.shadowColor = "#fff176";
+        ctx.shadowBlur = 16;
+        ctx.beginPath();
+        ctx.moveTo(trail[0].x, trail[0].y);
+        for (let i = 1; i < trail.length; i++) ctx.lineTo(trail[i].x, trail[i].y);
+        ctx.lineWidth = 7;
+        ctx.stroke();
+        ctx.lineWidth = 2.5;
+        ctx.strokeStyle = "#fffde7";
+        ctx.stroke();
+        ctx.shadowBlur = 0;
+      }
+
+      requestAnimationFrame(tick);
+    }
+
+    function startGame() {
+      score = 0;
+      lives = 3;
+      combo = 0;
+      difficulty = 1;
+      waveTimer = 0.3;
+      entities.length = 0;
+      particles.length = 0;
+      trail.length = 0;
+      scoreEl.textContent = "0";
+      livesEl.textContent = "❤ ❤ ❤";
+      startOverlay.classList.add("hidden");
+      overOverlay.classList.add("hidden");
+      running = true;
+      beep(520, 0.12, "square", 0.06);
+    }
+
+    function endGame() {
+      running = false;
+      pointerDown = false;
+      const best = Math.max(score, Number(localStorage.getItem(BEST_KEY) || 0));
+      localStorage.setItem(BEST_KEY, String(best));
+      finalScoreEl.textContent = String(score);
+      bestScoreEl.textContent = String(best);
+      overOverlay.classList.remove("hidden");
+    }
+
+    startOverlay.addEventListener("click", startGame);
+    overOverlay.addEventListener("click", startGame);
+
+    (async function boot() {
+      resize();
+      const jobs = [["bg", "assets/bg.webp"], ["bomb", "assets/bomb.webp"]];
+      for (const f of FRUITS) {
+        jobs.push([f.id, "assets/" + f.id + ".webp"]);
+        jobs.push([f.id + "_half", "assets/" + f.id + "_half.webp"]);
+      }
+      await Promise.all(jobs.map(async ([k, src]) => { images[k] = await loadImage(src); }));
+      bestScoreEl.textContent = localStorage.getItem(BEST_KEY) || "0";
+      requestAnimationFrame(tick);
+    })();
+  </script>
+</body>
+</html>

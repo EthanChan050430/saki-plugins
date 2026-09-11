@@ -1,0 +1,18 @@
+{
+  "name": "saki-theme-geo",
+  "version": "1.0.0",
+  "displayName": "简约几何",
+  "description": "把按钮与模态框改成切角几何形，炭黑 / 米白 / 钴蓝配色，去掉圆角与毛玻璃。",
+  "author": "DreamStarry",
+  "type": "theme",
+  "icon": "preview.webp",
+  "minPanelVersion": "3.5.0",
+  "theme": {
+    "css": "theme.css",
+    "htmlClass": "saki-plugin-theme-geo",
+    "backgrounds": {
+      "light": "bg-light.webp",
+      "dark": "bg-dark.webp"
+    }
+  }
+}
