@@ -6,12 +6,13 @@
 html.saki-plugin-theme-geo {
   --geo-ink: #12141a;
   --geo-ink-soft: #2a2e38;
-  --geo-paper: #f3efe4;
+  --geo-paper: #ece7dc;
   --geo-cream: #fffaf0;
   --geo-cobalt: #1f4bff;
   --geo-cobalt-deep: #1636c9;
   --geo-cobalt-soft: rgba(31, 75, 255, 0.12);
   --geo-line: rgba(18, 20, 26, 0.16);
+  --geo-grid: rgba(18, 20, 26, 0.055);
   --geo-shadow: 6px 6px 0 #12141a;
   --geo-shadow-sm: 3px 3px 0 #12141a;
   --geo-font: Bahnschrift, "Century Gothic", "Avenir Next", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
@@ -116,12 +117,13 @@ html.saki-plugin-theme-geo {
 html.saki-plugin-theme-geo[data-theme="dark"] {
   --geo-ink: #e8edf7;
   --geo-ink-soft: #c5ccd8;
-  --geo-paper: #10141c;
+  --geo-paper: #0b0e14;
   --geo-cream: #171d28;
   --geo-cobalt: #6b8cff;
   --geo-cobalt-deep: #8aa4ff;
   --geo-cobalt-soft: rgba(107, 140, 255, 0.16);
   --geo-line: rgba(232, 237, 247, 0.14);
+  --geo-grid: rgba(107, 140, 255, 0.07);
   --geo-shadow: 6px 6px 0 #05070b;
   --geo-shadow-sm: 3px 3px 0 #05070b;
   --sidebar-text: #9aa3b5 !important;
@@ -158,25 +160,18 @@ html.saki-plugin-theme-geo .saki-login-shell {
 html.saki-plugin-theme-geo body {
   color: var(--geo-ink) !important;
   background-color: var(--geo-paper) !important;
-  background-image: var(--app-background-image) !important;
-  background-size: cover !important;
-  background-position: center !important;
-  background-repeat: no-repeat !important;
-  background-attachment: fixed !important;
+  background-image:
+    linear-gradient(var(--geo-grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--geo-grid) 1px, transparent 1px),
+    var(--app-background-image) !important;
+  background-size: 56px 56px, 56px 56px, cover !important;
+  background-position: 0 0, 0 0, center !important;
+  background-repeat: repeat, repeat, no-repeat !important;
+  background-attachment: fixed, fixed, fixed !important;
 }
 
 html.saki-plugin-theme-geo body::after {
-  content: "";
-  position: fixed;
-  right: -80px;
-  bottom: -80px;
-  width: min(42vw, 560px);
-  height: min(42vw, 560px);
-  pointer-events: none;
-  z-index: 0;
-  background: var(--geo-cobalt);
-  clip-path: polygon(20% 0, 100% 0, 100% 80%, 80% 100%, 0 100%, 0 20%);
-  opacity: 0.16;
+  content: none !important;
 }
 
 html.saki-plugin-theme-geo .app-shell,
@@ -418,11 +413,95 @@ html.saki-plugin-theme-geo .topbar-inner:hover {
   box-shadow: var(--geo-shadow) !important;
 }
 
-html.saki-plugin-theme-geo .topbar-points-badge {
+html.saki-plugin-theme-geo .topbar-points-badge,
+html.saki-plugin-theme-geo .topbar-companion-panel .topbar-points-badge {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  min-height: 28px !important;
+  padding: 0 4px 0 0 !important;
+  background: transparent !important;
+  color: var(--geo-ink) !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  clip-path: none !important;
+  backdrop-filter: none !important;
+}
+
+html.saki-plugin-theme-geo .topbar-points-badge:hover,
+html.saki-plugin-theme-geo .topbar-companion-panel .topbar-points-badge:hover {
+  background: transparent !important;
+  transform: none !important;
+  box-shadow: none !important;
+  opacity: 1 !important;
+}
+
+html.saki-plugin-theme-geo .topbar-points-badge:hover .topbar-points-icon {
+  background: var(--geo-cobalt-deep) !important;
+}
+
+html.saki-plugin-theme-geo .topbar-points-icon,
+html.saki-plugin-theme-geo .topbar-points-badge .topbar-points-icon {
+  width: 24px !important;
+  height: 24px !important;
+  padding: 4px !important;
+  box-sizing: border-box !important;
+  color: #ffffff !important;
   background: var(--geo-cobalt) !important;
-  color: #fff !important;
+  border: 1px solid var(--geo-ink) !important;
   border-radius: 0 !important;
   clip-path: var(--geo-clip-sm);
+  flex-shrink: 0 !important;
+}
+
+html.saki-plugin-theme-geo .topbar-points-value,
+html.saki-plugin-theme-geo .topbar-points-badge .topbar-points-value {
+  color: var(--geo-ink) !important;
+  font-size: 14px !important;
+  font-weight: 800 !important;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.02em;
+  line-height: 1 !important;
+}
+
+html.saki-plugin-theme-geo .topbar-points-label,
+html.saki-plugin-theme-geo .topbar-points-badge .topbar-points-label {
+  display: inline !important;
+  color: var(--text-secondary) !important;
+  font-size: 11px !important;
+  font-weight: 600 !important;
+  letter-spacing: 0.12em;
+  line-height: 1 !important;
+}
+
+html.saki-plugin-theme-geo[data-theme="dark"] .topbar-points-badge,
+html.saki-plugin-theme-geo[data-theme="dark"] .topbar-companion-panel .topbar-points-badge {
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+  color: #e8edf7 !important;
+}
+
+html.saki-plugin-theme-geo[data-theme="dark"] .topbar-points-badge:hover {
+  box-shadow: none !important;
+}
+
+html.saki-plugin-theme-geo[data-theme="dark"] .topbar-points-icon,
+html.saki-plugin-theme-geo[data-theme="dark"] .topbar-points-badge .topbar-points-icon {
+  background: #1f4bff !important;
+  color: #ffffff !important;
+  border-color: #8aa4ff !important;
+}
+
+html.saki-plugin-theme-geo[data-theme="dark"] .topbar-points-value,
+html.saki-plugin-theme-geo[data-theme="dark"] .topbar-points-badge .topbar-points-value {
+  color: #f4f6fb !important;
+}
+
+html.saki-plugin-theme-geo[data-theme="dark"] .topbar-points-label,
+html.saki-plugin-theme-geo[data-theme="dark"] .topbar-points-badge .topbar-points-label {
+  color: #9aa3b5 !important;
 }
 
 html.saki-plugin-theme-geo .topbar-refresh-btn {
