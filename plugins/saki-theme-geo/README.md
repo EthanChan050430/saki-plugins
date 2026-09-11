@@ -1,10 +1,12 @@
 # 简约几何
 
-主题扩展。切角矩形按钮与模态框，炭黑 / 米白 / 钴蓝，去掉圆角和毛玻璃。
+把 Saki Panel 从液态玻璃整站换成构成主义几何外壳。
+
+炭黑侧栏、米白纸面、钴蓝强调、硬边切角与偏移投影；登录页、顶栏、卡片、表格、对话框、按钮全部重绘。Saki 立绘与桌宠不裁切。
 
 ## 清单
 
 - `type`: `theme`
 - `theme.css`: `theme.css`
 - `theme.htmlClass`: `saki-plugin-theme-geo`
-- 覆盖 `--radius-control` / `--radius-modal` 以及按钮、模态框的 `clip-path`
+- `theme.backgrounds`: `bg-light.webp` / `bg-dark.webp`
