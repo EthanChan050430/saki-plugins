@@ -96,6 +96,18 @@
     <div class="start">再来一局</div>
   </div>
   <script>
+    // Safe storage fallback — iframe sandbox without allow-same-origin
+    // throws SecurityError on localStorage access. Use an in-memory map.
+    const _memStore = {};
+    const safeStorage = {
+      get(key) {
+        try { return localStorage.getItem(key); } catch { return _memStore[key] ?? null; }
+      },
+      set(key, val) {
+        try { localStorage.setItem(key, val); } catch { _memStore[key] = String(val); }
+      }
+    };
+
     const canvas = document.getElementById("game");
     const ctx = canvas.getContext("2d");
     const scoreEl = document.getElementById("score");
@@ -130,19 +142,23 @@
     let lives = 3;
     let combo = 0;
     let comboUntil = 0;
-    let lastSliceAt = 0;
     let waveTimer = 0;
     let difficulty = 1;
+    let pointerX = 0, pointerY = 0;
     const entities = [];
     const particles = [];
+    const popups = [];      // combo 飘字
+    const shockwaves = [];  // 炸弹冲击波
     const trail = [];
     let pointerDown = false;
     let audioCtx = null;
+    let shakeTime = 0;      // 剩余震动时间（秒）
+    let shakeMag = 0;       // 当前震动幅度
 
     function resize() {
       dpr = Math.min(window.devicePixelRatio || 1, 2);
-      W = canvas.clientWidth;
-      H = canvas.clientHeight;
+      W = canvas.clientWidth || 0;
+      H = canvas.clientHeight || 0;
       canvas.width = Math.floor(W * dpr);
       canvas.height = Math.floor(H * dpr);
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
@@ -168,20 +184,21 @@
     }
 
     function spawnWave() {
-      const n = Math.min(1 + Math.floor(Math.random() * (1 + difficulty)), 5);
-      const bombChance = Math.min(0.08 + difficulty * 0.03, 0.28);
+      const n = Math.min(1 + Math.floor(Math.random() * (1 + Math.floor(difficulty))), 5);
+      const bombChance = Math.min(0.06 + difficulty * 0.025, 0.22);
       for (let i = 0; i < n; i++) {
         const isBomb = Math.random() < bombChance && n > 1;
         const spec = FRUITS[Math.floor(Math.random() * FRUITS.length)];
         const fromLeft = Math.random() < 0.5;
-        const x = fromLeft ? W * (0.1 + Math.random() * 0.35) : W * (0.55 + Math.random() * 0.35);
+        const x = fromLeft ? W * (0.08 + Math.random() * 0.30) : W * (0.62 + Math.random() * 0.30);
+        // 加大初速度：让水果抛得更高（vy -680 .. -980），水平速度也加一点
         entities.push({
           kind: isBomb ? "bomb" : "fruit",
           spec,
           x,
           y: H + 40,
-          vx: (fromLeft ? 1 : -1) * (80 + Math.random() * 140),
-          vy: -(520 + Math.random() * 220 + difficulty * 20),
+          vx: (fromLeft ? 1 : -1) * (120 + Math.random() * 200),
+          vy: -(680 + Math.random() * 300 + difficulty * 15),
           rot: Math.random() * Math.PI * 2,
           vr: (Math.random() - 0.5) * 6,
           r: isBomb ? 36 : spec.r,
@@ -191,51 +208,133 @@
       }
     }
 
-    function splat(x, y, color) {
-      for (let i = 0; i < 16; i++) {
+    function splat(x, y, color, amount) {
+      const n = amount || 24;
+      for (let i = 0; i < n; i++) {
         const a = Math.random() * Math.PI * 2;
-        const s = 80 + Math.random() * 220;
+        const s = 120 + Math.random() * 340;
         particles.push({
           x, y,
           vx: Math.cos(a) * s,
-          vy: Math.sin(a) * s - 40,
-          life: 0.45 + Math.random() * 0.35,
-          max: 0.8,
+          vy: Math.sin(a) * s - 60,
+          life: 0.55 + Math.random() * 0.45,
+          max: 1.0,
           color,
-          size: 3 + Math.random() * 6
+          size: 2 + Math.random() * 7
         });
       }
     }
 
     function sliceEntity(e) {
       if (e.sliced) return;
-      e.sliced = true;
+      e.sliced = true;   // 标记后 tick 渲染循环会跳过它（避免完整水果残留）
       if (e.kind === "bomb") {
-        beep(90, 0.5, "sawtooth", 0.16);
-        splat(e.x, e.y, "#222");
+        // 深爆 + 上升烟雾 + 橘红火花 + 金属碎片
+        beep(70, 0.18, "sawtooth", 0.22);
+        setTimeout(() => beep(50, 0.4, "sawtooth", 0.18), 80);
+
+        // 冲击波（双层：亮白内圈 + 暗红外圈）
+        shockwaves.push({ x: e.x, y: e.y, r: 10, max: 260, life: 0, maxLife: 0.55 });
+        shockwaves.push({ x: e.x, y: e.y, r: 8, max: 180, life: 0, maxLife: 0.35, inner: true });
+
+        // 屏幕震动
+        shakeTime = 0.55;
+        shakeMag = 14;
+
+        // 中心火球（金红色大粒子）
+        for (let i = 0; i < 18; i++) {
+          const a = Math.random() * Math.PI * 2;
+          const s = 260 + Math.random() * 340;
+          particles.push({
+            x: e.x, y: e.y,
+            vx: Math.cos(a) * s, vy: Math.sin(a) * s,
+            life: 0, max: 0.35 + Math.random() * 0.25,
+            color: Math.random() < 0.5 ? "#ffeb3b" : "#ff6f00",
+            size: 6 + Math.random() * 8
+          });
+        }
+        // 上升烟雾
+        for (let i = 0; i < 22; i++) {
+          particles.push({
+            x: e.x + (Math.random() - 0.5) * 40,
+            y: e.y + (Math.random() - 0.5) * 20,
+            vx: (Math.random() - 0.5) * 80,
+            vy: -80 - Math.random() * 180,
+            life: 0, max: 0.9 + Math.random() * 0.5,
+            color: "#333",
+            size: 12 + Math.random() * 14,
+            smoke: true
+          });
+        }
+        // 橙色火花飞溅
+        for (let i = 0; i < 28; i++) {
+          const a = Math.random() * Math.PI * 2;
+          const s = 300 + Math.random() * 500;
+          particles.push({
+            x: e.x, y: e.y,
+            vx: Math.cos(a) * s, vy: Math.sin(a) * s - 60,
+            life: 0, max: 0.45 + Math.random() * 0.3,
+            color: Math.random() < 0.6 ? "#ff6f00" : "#ffab40",
+            size: 3 + Math.random() * 4
+          });
+        }
+        // 金属碎片
+        for (let i = 0; i < 12; i++) {
+          const a = Math.random() * Math.PI * 2;
+          const s = 200 + Math.random() * 280;
+          particles.push({
+            x: e.x, y: e.y,
+            vx: Math.cos(a) * s, vy: Math.sin(a) * s - 40,
+            life: 0, max: 0.7 + Math.random() * 0.3,
+            color: "#bdbdbd",
+            size: 2 + Math.random() * 3,
+            metal: true
+          });
+        }
+        // 画面里的水果/炸弹被冲击波炸开
+        for (const t of entities) {
+          if (t.kind === "half" || t.sliced) continue;
+          const dx = t.x - e.x, dy = t.y - e.y;
+          const dist = Math.hypot(dx, dy) || 1;
+          const force = Math.max(0, 620 - dist * 1.2);
+          t.vx += (dx / dist) * force;
+          t.vy += (dy / dist) * force - 120;
+          // 直接切飞水果
+          if (t.kind === "fruit" && !t.sliced) sliceEntity(t);
+        }
         lives = 0;
         endGame();
         return;
       }
       const now = performance.now();
-      if (now - lastSliceAt < 420) combo += 1;
+      // combo 窗口从 700ms 拉长到 2500ms，让两波水果之间能接上连击
+      if (now < comboUntil) combo += 1;
       else combo = 1;
-      lastSliceAt = now;
-      comboUntil = now + 700;
+      comboUntil = now + 2500;
+
       const gained = e.spec.score * combo;
       score += gained;
       scoreEl.textContent = String(score);
-      splat(e.x, e.y, e.spec.juice);
-      beep(420 + combo * 80, 0.12, "triangle", 0.09);
+
+      splat(e.x, e.y, e.spec.juice, 28);
+      beep(420 + Math.min(combo, 8) * 60, 0.14, "triangle", 0.1);
+
+      // combo >=2 显示飘字特效（canvas 内绘制，不受 overlay 干扰）
       if (combo >= 2) {
-        comboEl.textContent = combo + " 连击!";
-        comboEl.style.opacity = "1";
-        setTimeout(() => { comboEl.style.opacity = "0"; }, 500);
+        popups.push({
+          x: e.x, y: e.y - 20,
+          text: combo + " COMBO!",
+          life: 0, max: 0.9,
+          color: combo >= 5 ? "#ffeb3b" : "#fff176",
+          scale: 0.6
+        });
       }
-      const halfVy = e.vy * 0.2;
+
+      // 两个半水果碎片
+      const halfVy = e.vy * 0.15;
       entities.push(
-        { kind: "half", spec: e.spec, x: e.x - 8, y: e.y, vx: e.vx - 90, vy: halfVy - 40, rot: e.rot, vr: -4, r: e.r * 0.85, sliced: true, flip: 1 },
-        { kind: "half", spec: e.spec, x: e.x + 8, y: e.y, vx: e.vx + 90, vy: halfVy - 30, rot: e.rot, vr: 4, r: e.r * 0.85, sliced: true, flip: -1 }
+        { kind: "half", spec: e.spec, x: e.x - 10, y: e.y, vx: e.vx - 120, vy: halfVy - 60, rot: e.rot, vr: -5, r: e.r * 0.85, sliced: true, flip: 1, decay: 0 },
+        { kind: "half", spec: e.spec, x: e.x + 10, y: e.y, vx: e.vx + 120, vy: halfVy - 50, rot: e.rot, vr: 5, r: e.r * 0.85, sliced: true, flip: -1, decay: 0 }
       );
     }
 
@@ -252,7 +351,7 @@
         const px = a.x + dx * t;
         const py = a.y + dy * t;
         const dist = Math.hypot(e.x - px, e.y - py);
-        if (dist < e.r * 0.78 && Math.hypot(dx, dy) > 8) return true;
+        if (dist < e.r * 0.82 && Math.hypot(dx, dy) > 6) return true;
       }
       return false;
     }
@@ -261,11 +360,13 @@
       const rect = canvas.getBoundingClientRect();
       const x = (e.clientX ?? (e.touches && e.touches[0].clientX) ?? 0) - rect.left;
       const y = (e.clientY ?? (e.touches && e.touches[0].clientY) ?? 0) - rect.top;
+      pointerX = x;
+      pointerY = y;
       if (down === true) pointerDown = true;
       if (down === false) pointerDown = false;
       if (pointerDown) {
         trail.push({ x, y, t: performance.now() });
-        if (trail.length > 14) trail.shift();
+        if (trail.length > 16) trail.shift();
       }
     }
     canvas.addEventListener("pointerdown", (e) => { canvas.setPointerCapture(e.pointerId); pointer(e, true); });
@@ -279,6 +380,7 @@
       last = ts;
       ctx.clearRect(0, 0, W, H);
 
+      // === 背景 ===
       const bg = images.bg;
       if (bg) {
         const scale = Math.max(W / bg.width, H / bg.height);
@@ -293,20 +395,27 @@
       }
 
       if (running) {
+        // combo 过期检测
+        if (performance.now() >= comboUntil) combo = 0;
+
         waveTimer -= dt;
         if (waveTimer <= 0) {
           spawnWave();
-          waveTimer = Math.max(0.85, 1.7 - difficulty * 0.12);
-          difficulty += 0.08;
+          waveTimer = Math.max(0.75, 1.55 - difficulty * 0.09);
+          difficulty += 0.06;
         }
 
-        const g = 780;
+        const g = 820;
         for (const e of entities) {
           e.vy += g * dt;
           e.x += e.vx * dt;
           e.y += e.vy * dt;
           e.rot += e.vr * dt;
+
+          // 只有 sliced=false 的完整水果/bomb 才能被切（half 碎片不需要再切）
           if (!e.sliced && e.kind !== "half" && pointerDown && trailHits(e)) sliceEntity(e);
+
+          // 水果漏掉 → 扣命
           if (!e.sliced && e.kind === "fruit" && !e.missed && e.y > H + 80 && e.vy > 0) {
             e.missed = true;
             lives = Math.max(0, lives - 1);
@@ -314,13 +423,28 @@
             beep(160, 0.2, "sine", 0.08);
             if (lives <= 0) endGame();
           }
+
+          // half 碎片衰减
+          if (e.kind === "half") e.decay = (e.decay || 0) + dt;
         }
+
+        // 清理飞出屏幕的实体
         for (let i = entities.length - 1; i >= 0; i--) {
           const e = entities[i];
-          if (e.y > H + 160 || e.x < -160 || e.x > W + 160) entities.splice(i, 1);
+          if (e.y > H + 200 || e.x < -200 || e.x > W + 200) entities.splice(i, 1);
         }
+
+        // 粒子物理（烟雾上浮+膨胀、金属碎片有阻尼）
         for (const p of particles) {
-          p.vy += 400 * dt;
+          if (p.smoke) {
+            p.vy -= 60 * dt;          // 持续上浮
+            p.vx *= 0.98;             // 水平阻尼
+            p.size += 14 * dt;        // 持续膨胀
+            p.life -= dt;
+            continue;
+          }
+          p.vy += (p.metal ? 900 : 400) * dt;   // 金属碎片更重
+          if (p.metal) p.vx *= 0.96;             // 金属有空气阻力
           p.x += p.vx * dt;
           p.y += p.vy * dt;
           p.life -= dt;
@@ -328,13 +452,52 @@
         for (let i = particles.length - 1; i >= 0; i--) {
           if (particles[i].life <= 0) particles.splice(i, 1);
         }
+
+        // 冲击波衰减
+        for (const sw of shockwaves) {
+          sw.life += dt;
+          sw.r = 10 + (sw.max - 10) * Math.min(1, sw.life / sw.maxLife);
+        }
+        for (let i = shockwaves.length - 1; i >= 0; i--) {
+          if (shockwaves[i].life >= shockwaves[i].maxLife) shockwaves.splice(i, 1);
+        }
+
+        // 屏幕震动衰减
+        if (shakeTime > 0) {
+          shakeTime -= dt;
+          shakeMag *= 0.88;
+        }
+
+        // combo 飘字
+        for (const p of popups) {
+          p.life += dt;
+          p.y -= 50 * dt;
+          p.scale = 0.6 + p.life * 0.8;
+        }
+        for (let i = popups.length - 1; i >= 0; i--) {
+          if (popups[i].life >= popups[i].max) popups.splice(i, 1);
+        }
+
+        // trail 时效管理
         const now = performance.now();
-        while (trail.length && now - trail[0].t > 140) trail.shift();
+        while (trail.length && now - trail[0].t > 160) trail.shift();
         if (!pointerDown && trail.length) trail.shift();
       }
 
+      // === 屏幕震动（影响后续所有渲染） ===
+      let shakeX = 0, shakeY = 0;
+      if (shakeTime > 0 && shakeMag > 0.3) {
+        shakeX = (Math.random() - 0.5) * shakeMag * 2;
+        shakeY = (Math.random() - 0.5) * shakeMag * 2;
+        ctx.save();
+        ctx.translate(shakeX, shakeY);
+      }
+
+      // === 烟雾粒子先画（底层） ===
       for (const p of particles) {
-        ctx.globalAlpha = Math.max(0, p.life / p.max);
+        if (!p.smoke) continue;
+        const alpha = Math.max(0, Math.min(1, 1 - p.life / p.max)) * 0.55;
+        ctx.globalAlpha = alpha;
         ctx.fillStyle = p.color;
         ctx.beginPath();
         ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
@@ -342,7 +505,20 @@
       }
       ctx.globalAlpha = 1;
 
+      // === 普通粒子 ===
+      for (const p of particles) {
+        if (p.smoke) continue;
+        ctx.globalAlpha = Math.max(0, 1 - p.life / p.max);
+        ctx.fillStyle = p.color;
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      ctx.globalAlpha = 1;
+
+      // === 实体渲染（关键：跳过已切的完整水果，只画 half 碎片） ===
       for (const e of entities) {
+        if (e.sliced && e.kind !== "half") continue;   // ← 修完整水果残留
         ctx.save();
         ctx.translate(e.x, e.y);
         ctx.rotate(e.rot);
@@ -353,6 +529,7 @@
             ? (images[e.spec.id + "_half"] || images[e.spec.id])
             : images[e.spec.id];
         const size = e.r * 2.2;
+        if (e.kind === "half") ctx.globalAlpha = Math.max(0, 1 - (e.decay || 0) / 0.6);
         if (img) ctx.drawImage(img, -size / 2, -size / 2, size, size);
         else {
           ctx.fillStyle = e.kind === "bomb" ? "#222" : (e.spec && e.spec.juice) || "#fff";
@@ -360,9 +537,11 @@
           ctx.arc(0, 0, e.r, 0, Math.PI * 2);
           ctx.fill();
         }
+        ctx.globalAlpha = 1;
         ctx.restore();
       }
 
+      // === trail 白线 ===
       if (trail.length > 1) {
         ctx.lineCap = "round";
         ctx.lineJoin = "round";
@@ -380,6 +559,75 @@
         ctx.shadowBlur = 0;
       }
 
+      // === 冲击波（在 trail 之上，但要在震屏 translate 之内） ===
+      for (const sw of shockwaves) {
+        const t = sw.life / sw.maxLife;
+        const alpha = Math.max(0, 1 - t);
+        ctx.beginPath();
+        ctx.strokeStyle = sw.inner
+          ? `rgba(255, 248, 225, ${alpha * 0.9})`
+          : `rgba(255, 140, 30, ${alpha * 0.7})`;
+        ctx.lineWidth = sw.inner ? 5 : 10;
+        ctx.arc(sw.x, sw.y, sw.r, 0, Math.PI * 2);
+        ctx.stroke();
+        // 内圈再加一个实心亮圆快速衰减
+        if (sw.inner) {
+          ctx.beginPath();
+          ctx.fillStyle = `rgba(255, 235, 150, ${alpha * 0.5})`;
+          ctx.arc(sw.x, sw.y, sw.r * 0.55, 0, Math.PI * 2);
+          ctx.fill();
+        }
+      }
+
+      // === 自定义光标/准星（canvas 内绘制，替代 CSS cursor:none） ===
+      {
+        const hot = trail.length ? trail[trail.length - 1] : { x: pointerX, y: pointerY };
+        ctx.save();
+        ctx.translate(hot.x, hot.y);
+        // 外圈淡金色准星
+        ctx.strokeStyle = "rgba(255, 235, 150, 0.9)";
+        ctx.lineWidth = 1.5;
+        ctx.beginPath();
+        ctx.arc(0, 0, 14, 0, Math.PI * 2);
+        ctx.stroke();
+        // 中心点
+        ctx.fillStyle = "#fffde7";
+        ctx.beginPath();
+        ctx.arc(0, 0, 2.5, 0, Math.PI * 2);
+        ctx.fill();
+        // 十字短线
+        ctx.strokeStyle = "rgba(255, 235, 150, 0.7)";
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        ctx.moveTo(-8, 0); ctx.lineTo(-3, 0);
+        ctx.moveTo(3, 0); ctx.lineTo(8, 0);
+        ctx.moveTo(0, -8); ctx.lineTo(0, -3);
+        ctx.moveTo(0, 3); ctx.lineTo(0, 8);
+        ctx.stroke();
+        ctx.restore();
+      }
+
+      // === combo 飘字 ===
+      for (const p of popups) {
+        ctx.save();
+        const alpha = Math.max(0, 1 - p.life / p.max);
+        ctx.globalAlpha = alpha;
+        ctx.translate(p.x, p.y);
+        ctx.scale(p.scale, p.scale);
+        ctx.font = "900 28px 'Trebuchet MS', sans-serif";
+        ctx.textAlign = "center";
+        ctx.textBaseline = "middle";
+        ctx.strokeStyle = "#c62828";
+        ctx.lineWidth = 3;
+        ctx.strokeText(p.text, 0, 0);
+        ctx.fillStyle = p.color;
+        ctx.fillText(p.text, 0, 0);
+        ctx.restore();
+      }
+
+      // === 恢复屏幕震动位移 ===
+      if (shakeTime > 0 && shakeMag > 0.3) ctx.restore();
+
       requestAnimationFrame(tick);
     }
 
@@ -387,13 +635,16 @@
       score = 0;
       lives = 3;
       combo = 0;
+      comboUntil = 0;
       difficulty = 1;
       waveTimer = 0.3;
       entities.length = 0;
       particles.length = 0;
+      popups.length = 0;
       trail.length = 0;
       scoreEl.textContent = "0";
       livesEl.textContent = "❤ ❤ ❤";
+      comboEl.style.opacity = "0";
       startOverlay.classList.add("hidden");
       overOverlay.classList.add("hidden");
       running = true;
@@ -403,8 +654,9 @@
     function endGame() {
       running = false;
       pointerDown = false;
-      const best = Math.max(score, Number(localStorage.getItem(BEST_KEY) || 0));
-      localStorage.setItem(BEST_KEY, String(best));
+      const prevBest = Number(safeStorage.get(BEST_KEY) || 0);
+      const best = Math.max(score, prevBest);
+      safeStorage.set(BEST_KEY, String(best));
       finalScoreEl.textContent = String(score);
       bestScoreEl.textContent = String(best);
       overOverlay.classList.remove("hidden");
@@ -414,15 +666,37 @@
     overOverlay.addEventListener("click", startGame);
 
     (async function boot() {
-      resize();
-      const jobs = [["bg", "assets/bg.webp"], ["bomb", "assets/bomb.webp"]];
-      for (const f of FRUITS) {
-        jobs.push([f.id, "assets/" + f.id + ".webp"]);
-        jobs.push([f.id + "_half", "assets/" + f.id + "_half.webp"]);
+      try {
+        // Wait until the canvas has real dimensions (iframe may not be laid out yet)
+        for (let i = 0; i < 20; i++) {
+          resize();
+          if (W > 10 && H > 10) break;
+          await new Promise((r) => setTimeout(r, 25));
+        }
+        if (!W || !H) {
+          const p = canvas.parentElement;
+          if (p) {
+            canvas.style.width = p.clientWidth + "px";
+            canvas.style.height = p.clientHeight + "px";
+            resize();
+          }
+        }
+
+        const jobs = [["bg", "assets/bg.webp"], ["bomb", "assets/bomb.webp"]];
+        for (const f of FRUITS) {
+          jobs.push([f.id, "assets/" + f.id + ".webp"]);
+          jobs.push([f.id + "_half", "assets/" + f.id + "_half.webp"]);
+        }
+        await Promise.all(jobs.map(async ([k, src]) => { images[k] = await loadImage(src); }));
+        bestScoreEl.textContent = safeStorage.get(BEST_KEY) || "0";
+        requestAnimationFrame(tick);
+      } catch (err) {
+        console.error("[fruit-slice] boot error:", err);
+        bestScoreEl.textContent = safeStorage.get(BEST_KEY) || "0";
+        startOverlay.classList.remove("hidden");
+        startOverlay.querySelector(".start").textContent = "加载失败 点击重试";
+        startOverlay.onclick = () => location.reload();
       }
-      await Promise.all(jobs.map(async ([k, src]) => { images[k] = await loadImage(src); }));
-      bestScoreEl.textContent = localStorage.getItem(BEST_KEY) || "0";
-      requestAnimationFrame(tick);
     })();
   </script>
 </body>
