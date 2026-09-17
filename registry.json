@@ -40,7 +40,7 @@
     "description": "UI を日本語にローカライズ。メニュー、ボタン、通知、エラーメッセージなどを一括翻訳。",
     "author": "DreamStarry",
     "type": "locale",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "repo": "EthanChan050430/saki-plugins",
     "ref": "master",
     "featured": true
