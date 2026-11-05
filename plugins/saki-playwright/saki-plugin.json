@@ -1,0 +1,12 @@
+{
+  "name": "saki-playwright",
+  "version": "1.0.0",
+  "displayName": "浏览器自动化",
+  "description": "Playwright MCP：用真实浏览器打开页面、点击、填写表单、截图，适合网页测试与数据采集。",
+  "author": "DreamStarry",
+  "type": "bundle",
+  "skills": "skills",
+  "interface": {
+    "category": "开发"
+  }
+}

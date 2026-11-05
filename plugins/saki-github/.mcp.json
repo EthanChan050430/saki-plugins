@@ -1,0 +1,12 @@
+{
+  "mcpServers": {
+    "github": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-github"
+      ],
+      "description": "需要设置 GITHUB_PERSONAL_ACCESS_TOKEN 环境变量"
+    }
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "name": "saki-github",
+  "version": "1.0.0",
+  "displayName": "GitHub",
+  "description": "GitHub MCP：搜索仓库与代码、读取与创建 Issue / PR。需要在环境变量中提供 GITHUB_PERSONAL_ACCESS_TOKEN。",
+  "author": "DreamStarry",
+  "type": "bundle",
+  "skills": "skills",
+  "interface": {
+    "category": "开发"
+  }
+}

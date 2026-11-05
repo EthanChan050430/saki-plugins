@@ -1,0 +1,12 @@
+{
+  "name": "saki-sequential-thinking",
+  "version": "1.0.0",
+  "displayName": "分步推理",
+  "description": "Sequential Thinking MCP：把复杂问题拆成可修订的思考步骤，适合方案设计、排错与规划。",
+  "author": "DreamStarry",
+  "type": "bundle",
+  "skills": "skills",
+  "interface": {
+    "category": "效率"
+  }
+}

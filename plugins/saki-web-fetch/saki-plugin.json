@@ -1,0 +1,12 @@
+{
+  "name": "saki-web-fetch",
+  "version": "1.0.0",
+  "displayName": "网页抓取",
+  "description": "Fetch MCP：抓取网页并转换为 Markdown，便于阅读文档、文章与接口说明。",
+  "author": "DreamStarry",
+  "type": "bundle",
+  "skills": "skills",
+  "interface": {
+    "category": "网络"
+  }
+}

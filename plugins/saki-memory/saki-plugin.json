@@ -1,0 +1,12 @@
+{
+  "name": "saki-memory",
+  "version": "1.0.0",
+  "displayName": "长期记忆图谱",
+  "description": "基于知识图谱的长期记忆 MCP：记录实体、关系与观察，跨对话保存用户偏好与项目事实。",
+  "author": "DreamStarry",
+  "type": "bundle",
+  "skills": "skills",
+  "interface": {
+    "category": "效率"
+  }
+}

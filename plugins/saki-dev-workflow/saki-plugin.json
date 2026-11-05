@@ -1,0 +1,12 @@
+{
+  "name": "saki-dev-workflow",
+  "version": "1.0.0",
+  "displayName": "开发工作流技能包",
+  "description": "纯技能插件：代码审查、排错、提交信息与技术文档写作四个常用技能，无需额外依赖。",
+  "author": "DreamStarry",
+  "type": "bundle",
+  "skills": "skills",
+  "interface": {
+    "category": "开发"
+  }
+}

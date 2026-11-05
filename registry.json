@@ -44,5 +44,109 @@
     "repo": "EthanChan050430/saki-plugins",
     "ref": "master",
     "featured": true
+  },
+  {
+    "name": "saki-context7",
+    "displayName": "Context7 文档查询",
+    "description": "接入 Context7 MCP，实时查询任意开源库的最新官方文档与代码示例，并附带使用技巧技能。",
+    "author": "DreamStarry",
+    "type": "bundle",
+    "version": "1.0.0",
+    "repo": "EthanChan050430/saki-plugins",
+    "category": "开发",
+    "capabilities": [
+      "skills",
+      "mcp"
+    ],
+    "featured": true
+  },
+  {
+    "name": "saki-memory",
+    "displayName": "长期记忆图谱",
+    "description": "基于知识图谱的长期记忆 MCP：记录实体、关系与观察，跨对话保存用户偏好与项目事实。",
+    "author": "DreamStarry",
+    "type": "bundle",
+    "version": "1.0.0",
+    "repo": "EthanChan050430/saki-plugins",
+    "category": "效率",
+    "capabilities": [
+      "skills",
+      "mcp"
+    ],
+    "featured": true
+  },
+  {
+    "name": "saki-sequential-thinking",
+    "displayName": "分步推理",
+    "description": "Sequential Thinking MCP：把复杂问题拆成可修订的思考步骤，适合方案设计、排错与规划。",
+    "author": "DreamStarry",
+    "type": "bundle",
+    "version": "1.0.0",
+    "repo": "EthanChan050430/saki-plugins",
+    "category": "效率",
+    "capabilities": [
+      "skills",
+      "mcp"
+    ],
+    "featured": true
+  },
+  {
+    "name": "saki-web-fetch",
+    "displayName": "网页抓取",
+    "description": "Fetch MCP：抓取网页并转换为 Markdown，便于阅读文档、文章与接口说明。",
+    "author": "DreamStarry",
+    "type": "bundle",
+    "version": "1.0.0",
+    "repo": "EthanChan050430/saki-plugins",
+    "category": "网络",
+    "capabilities": [
+      "skills",
+      "mcp"
+    ],
+    "featured": true
+  },
+  {
+    "name": "saki-playwright",
+    "displayName": "浏览器自动化",
+    "description": "Playwright MCP：用真实浏览器打开页面、点击、填写表单、截图，适合网页测试与数据采集。",
+    "author": "DreamStarry",
+    "type": "bundle",
+    "version": "1.0.0",
+    "repo": "EthanChan050430/saki-plugins",
+    "category": "开发",
+    "capabilities": [
+      "skills",
+      "mcp"
+    ],
+    "featured": true
+  },
+  {
+    "name": "saki-github",
+    "displayName": "GitHub",
+    "description": "GitHub MCP：搜索仓库与代码、读取与创建 Issue / PR。需要在环境变量中提供 GITHUB_PERSONAL_ACCESS_TOKEN。",
+    "author": "DreamStarry",
+    "type": "bundle",
+    "version": "1.0.0",
+    "repo": "EthanChan050430/saki-plugins",
+    "category": "开发",
+    "capabilities": [
+      "skills",
+      "mcp"
+    ],
+    "featured": true
+  },
+  {
+    "name": "saki-dev-workflow",
+    "displayName": "开发工作流技能包",
+    "description": "纯技能插件：代码审查、排错、提交信息与技术文档写作四个常用技能，无需额外依赖。",
+    "author": "DreamStarry",
+    "type": "bundle",
+    "version": "1.0.0",
+    "repo": "EthanChan050430/saki-plugins",
+    "category": "开发",
+    "capabilities": [
+      "skills"
+    ],
+    "featured": true
   }
 ]
